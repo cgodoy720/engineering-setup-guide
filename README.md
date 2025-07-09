@@ -25,82 +25,167 @@ Our codebase consists of two main repositories:
 ## Getting Started
 
 ### Prerequisites
-- Node.js (version 18.x or higher)
-- Nodemon (in terminal run: `sudo npm i -g nodemon`)
-- Git
-- Terminal access
+- Node.js (Download here [nodejs.org](https://nodejs.org/en/download))
+- Nodemon (in terminal run: `sudo npm i -g nodemon`, then enter your computer password and hit enter/return)
+- Git (pre-installed on Mac, verify with `git --version`)
+- Terminal access (`Command + Space`, type in Terminal, hit enter/return)
 
 ### Initial Setup
 
-1. **Clone both repositories separately**:
+1. **Fork both repositories on GitHub**:
+   
+   **Fork the backend repository:**
+   - Go to [https://github.com/cgodoy720/test-pilot-server](https://github.com/cgodoy720/test-pilot-server)
+   - Click the **"Fork"** button in the top-right corner
+   - Click **"Create fork"** (keep default settings)
+   
+   **Fork the frontend repository:**
+   - Go to [https://github.com/cgodoy720/pilot-client](https://github.com/cgodoy720/pilot-client)
+   - Click the **"Fork"** button in the top-right corner
+   - Click **"Create fork"** (keep default settings)
+   
+   **Note**: This creates your own copies of the repositories that you can modify and submit pull requests from.
+
+2. **In the `terminal` create a parent folder and clone your forked repositories**:
    ```bash
-   git clone https://github.com/cgodoy720/test-pilot-server.git
-   git clone https://github.com/cgodoy720/pilot-client.git
+   # Create a parent folder for the project
+   mkdir pilot-agent-project
+   cd pilot-agent-project
+   
+   # Clone YOUR forked repositories (replace YOUR_USERNAME with your GitHub username)
+   git clone https://github.com/YOUR_USERNAME/test-pilot-server.git
+   git clone https://github.com/YOUR_USERNAME/pilot-client.git
+   ```
+   
+   Your folder structure should now look like:
+   ```
+   pilot-agent-project/
+   ├── test-pilot-server/
+   └── pilot-client/
    ```
 
-2. **Create feature branches** (never work directly on main):
+3. **Open the parent folder in Cursor**:
+   - Open Cursor IDE
+   - Go to File → Open Folder (or `Command + O` on Mac)
+   - Select the `pilot-agent-project` folder you just created
+   - **Important**: This gives Cursor's AI context of both repositories, making it much more helpful!
+
+4. **Set up terminals and create feature branches** (never work directly on main):
+   
+   **Open and set up two terminals in Cursor:**
+   - Open a terminal: View → Terminal (or `Control + `` backtick)
+   - Click the `+` button next to the terminal tab to open a second terminal
+   - Right-click the first terminal tab → Rename → type `backend`
+   - Right-click the second terminal tab → Rename → type `frontend`
+   
+   **In the `backend` terminal:**
    ```bash
-   # Backend
    cd test-pilot-server
-   git checkout -b feature/your-feature-name
-   
-   # Frontend  
-   cd pilot-client
-   git checkout -b feature/your-feature-name
+   git checkout -b replace-with-your-feature-name
    ```
-
-3. **Environment Configuration**:
    
-   **Backend Setup** (`test-pilot-server`):
-   - Copy `.env.example` to `.env` in the backend directory
-   - The example file contains connection details for our mock development database
+   **In the `frontend` terminal:**
+   ```bash
+   cd pilot-client
+   git checkout -b replace-with-your-feature-name
+   ```
+   
+   **Note**: Keep these terminals open - you'll use the `backend` terminal for all backend commands and `frontend` terminal for all frontend commands throughout development!
+
+5. **Environment Configuration**:
+   
+   **In the `backend` terminal:**
+   ```bash
+   # Copy the example file to create your .env file
+   cp .env.example .env
+   ```
+   - The `.env.example` file contains actual mock database connection details
    - **Never commit `.env` files to version control**
+
+6. **Configure database connection for mock database**:
    
-   **Frontend Setup** (`pilot-client`):
-   - Copy `.env.example` to `.env` in the frontend directory (if needed)
-
-4. **Install dependencies**:
+   **In the `backend` terminal, edit the database config file:**
+   - Open `db/dbConfig.js` in Cursor
+   - **Make sure lines 48-50 are NOT commented out** (SSL configuration):
+   ```javascript
+   // ssl: {
+   //     rejectUnauthorized: true
+   // }
+   ```
+   - These lines should already have `//` at the beginning
+   - **Important**: The mock database uses SSL, so these lines must be added back in. Erase the `//` from each of those lines to add them in.
+   
+   **In the `frontend` terminal:**
    ```bash
-   # Backend
-   cd test-pilot-server
-   npm install
+   # Copy the example file (if it exists)
+   cp .env.example .env
+   ```
 
-   # Frontend
-   cd pilot-client
+7. **Install dependencies**:
+   
+   **In the `backend` terminal:**
+   ```bash
+   npm install
+   ```
+   
+   **In the `frontend` terminal:**
+   ```bash
    npm install
    ```
 
-5. **Database Connection**:
+8. **Database Connection**:
    - We use a shared mock PostgreSQL database for development
    - Connection details are provided in `.env.example` with actual values
    - **No local database setup required** - just use the provided mock database
-   - To connect manually via terminal (after copying `.env.example` to `.env`):
+   - To connect manually via terminal (in the `backend` terminal):
    ```bash
    source .env && PGPASSWORD="$PG_PASSWORD" psql -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DATABASE"
    ```
 
-6. **Start the applications**:
-   ```bash
-   # Backend (runs on port 4001)
-   cd test-pilot-server
-   npm start
+9. **Start the applications**:
    
-   # Frontend (runs on port 5173)
-   cd pilot-client
+   **In the `backend` terminal:**
+   ```bash
+   npm start
+   ```
+   You should see: `Server listening on port 4001`
+   
+   **In the `frontend` terminal:**
+   ```bash
    npm run dev
    ```
+   You should see: `Local: http://localhost:5173/`
+   
+   **Note**: Both terminals need to stay running while you develop. Keep them open and use them for all future backend/frontend commands!
+
+## Working in Cursor IDE
+
+### Getting the Most from Cursor's AI
+- **Always have the parent folder open**: This gives the AI context of both frontend and backend
+- **Use specific prompts**: Instead of "fix this," say "fix this CSS class to follow BEM naming conventions"
+- **Reference files**: Say "in the file `controllers/userController.js`" to help the AI understand context
+- **Ask for explanations**: Use prompts like "explain how this database query works"
+
+### Common Cursor Commands
+- **Command + Shift + P**: Open command palette
+- **Command + P**: Quick file search
+- **Command + /**: Comment/uncomment code
+- **Command + D**: Select next occurrence of selected text
+- **Command + Shift + L**: Select all occurrences of selected text
+
+### Working with Multiple Projects
+- **File Explorer**: Use the left sidebar to navigate between `test-pilot-server` and `pilot-client`
+- **Terminal**: Use Cursor's built-in terminal (View → Terminal) or `Control + `` (backtick)
+- **Split View**: Right-click a file tab → "Split Right" to view backend and frontend files side-by-side
 
 ## Backend Architecture (`test-pilot-server`)
 
 ### Directory Structure
-- **`db/`**: Database configuration, queries, and vector operations
+- **`db/`**: Database configuration
   - `dbConfig.js`: Main database connection setup
-  - `vectorQueries.js`: AI embedding and search functions
 - **`queries/`**: Database query functions organized by feature
 - **`controllers/`**: API route handlers
 - **`services/`**: Business logic and external API integrations
-- **`middleware/`**: Authentication and validation middleware
-- **`routes/`**: API route definitions
 - **`app.js`**: Main application file
 - **`server.js`**: Server startup file
 
@@ -182,29 +267,65 @@ Our codebase consists of two main repositories:
 - Keep branches focused on single features or fixes
 
 ### Getting Started on a New Feature
-1. **Pull latest changes**:
+1. **Pull latest changes in both repositories**:
+   
+   **In the `backend` terminal:**
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
+   
+   **In the `frontend` terminal:**
    ```bash
    git checkout main
    git pull origin main
    ```
 
-2. **Create feature branch**:
+2. **Create feature branches**:
+   
+   **In the `backend` terminal:**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+   
+   **In the `frontend` terminal:**
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 3. **Make your changes and commit regularly**:
+   
+   **When working on backend files, in the `backend` terminal:**
+   ```bash
+   git add .
+   git commit -m "descriptive commit message"
+   ```
+   
+   **When working on frontend files, in the `frontend` terminal:**
    ```bash
    git add .
    git commit -m "descriptive commit message"
    ```
 
-4. **Push your branch**:
+4. **Push your branches**:
+   
+   **In the `backend` terminal:**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+   
+   **In the `frontend` terminal:**
    ```bash
    git push origin feature/your-feature-name
    ```
 
-5. **Create Pull Request** on GitHub for code review
+5. **Create Pull Requests** on GitHub:
+   - Go to your forked repository on GitHub (https://github.com/YOUR_USERNAME/test-pilot-server or pilot-client)
+   - Click **"Compare & pull request"** button that appears after pushing
+   - Make sure the pull request is going from your fork to the original repository (`cgodoy720/test-pilot-server` or `cgodoy720/pilot-client`)
+   - Add a clear title and description of your changes
+   - Click **"Create pull request"**
+   - Repeat for the other repository if you made changes to both
 
 ### Code Review Process
 - All code must be reviewed before merging
@@ -309,29 +430,63 @@ Our codebase consists of two main repositories:
 
 ### Common Issues
 
+#### Setup Issues
+
+**Missing `.env` file**
+- **Issue**: `Error: Cannot find module 'dotenv'` or database connection errors
+- **Solution**: Make sure you copied `.env.example` to `.env` in the backend folder
+
+**Permission denied when installing nodemon**
+- **Issue**: `npm install -g nodemon` fails
+- **Solution**: Use `sudo npm install -g nodemon` and enter your computer password
+
+**Git branch errors**
+- **Issue**: `fatal: A branch named 'feature/...' already exists`
+- **Solution**: Use a different branch name or delete the old branch with `git branch -d feature/old-name`
+
+**Clone URL errors**
+- **Issue**: `git clone` fails with permission denied or repository not found
+- **Solution**: Make sure you forked the repositories first and are cloning from YOUR GitHub username, not `cgodoy720`
+
+**Database configuration errors**
+- **Issue**: SSL connection errors or "rejectUnauthorized" errors
+- **Solution**: Make sure the SSL configuration in `db/dbConfig.js` lines 48-50 are commented out (start with `//`)
+
 #### Database Connection Problems
 - **Issue**: Cannot connect to database
-- **Solution**: Verify `.env` file has correct database credentials from `.env.example`
+- **Solution**: 
+  1. Verify `.env` file has correct database credentials from `.env.example`
+  2. Check that you're in the `test-pilot-server` folder when running the app
+  3. Make sure your internet connection is working
 
 #### Frontend Not Loading
 - **Issue**: React app shows errors or blank screen
 - **Solution**: 
-  1. Check if backend is running on port 4001
-  2. Verify `VITE_API_URL` in frontend `.env`
-  3. Check browser console for errors
+  1. Check if backend is running on port 4001 (look for "Server listening on port 4001")
+  2. Verify `VITE_API_URL` in frontend `.env` file
+  3. Check browser console for errors (F12 → Console tab)
+  4. Try refreshing the page
 
 #### API Endpoints Not Working
 - **Issue**: 404 or 500 errors from API
 - **Solution**:
-  1. Verify backend server is running
+  1. Verify backend server is running (check terminal for "Server listening on port 4001")
   2. Check API endpoint URLs use `/api/` prefix
   3. Review backend console for error messages
+  4. Use Postman to test endpoints directly
 
 #### Port Conflicts
 - **Issue**: Cannot start servers due to port conflicts
 - **Solution**: 
-  - Backend: Change `PORT` in `.env` file
-  - Frontend: Vite will automatically find available port
+  - Backend: Change `PORT` in `.env` file to a different number (like 4002)
+  - Frontend: Vite will automatically find an available port
+
+#### Cannot Find Files/Folders
+- **Issue**: Terminal says "No such file or directory"
+- **Solution**: 
+  1. Use `pwd` to see what folder you're in
+  2. Use `ls` to see what's in the current folder
+  3. Navigate to the correct folder with `cd folder-name`
 
 ### Getting Help
 - Check existing documentation first
