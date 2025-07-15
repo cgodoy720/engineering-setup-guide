@@ -25,6 +25,7 @@ Our codebase consists of two main repositories:
 ## Getting Started
 
 ### Prerequisites
+- iTerm2 ([Download here](https://iterm2.com/))
 - Node.js (Download here [nodejs.org](https://nodejs.org/en/download))
 - Nodemon (in terminal run: `sudo npm i -g nodemon`, then enter your computer password and hit enter/return)
 - Git (pre-installed on Mac, verify with `git --version`)
@@ -158,25 +159,7 @@ Our codebase consists of two main repositories:
    
    **Note**: Both terminals need to stay running while you develop. Keep them open and use them for all future backend/frontend commands!
 
-## Working in Cursor IDE
-
-### Getting the Most from Cursor's AI
-- **Always have the parent folder open**: This gives the AI context of both frontend and backend
-- **Use specific prompts**: Instead of "fix this," say "fix this CSS class to follow BEM naming conventions"
-- **Reference files**: Say "in the file `controllers/userController.js`" to help the AI understand context
-- **Ask for explanations**: Use prompts like "explain how this database query works"
-
-### Common Cursor Commands
-- **Command + Shift + P**: Open command palette
-- **Command + P**: Quick file search
-- **Command + /**: Comment/uncomment code
-- **Command + D**: Select next occurrence of selected text
-- **Command + Shift + L**: Select all occurrences of selected text
-
-### Working with Multiple Projects
-- **File Explorer**: Use the left sidebar to navigate between `test-pilot-server` and `pilot-client`
-- **Terminal**: Use Cursor's built-in terminal (View → Terminal) or `Control + `` (backtick)
-- **Split View**: Right-click a file tab → "Split Right" to view backend and frontend files side-by-side
+> **For Cursor IDE users**: See [cursor.md](./cursor.md) for Cursor-specific best practices, AI tips, and keyboard shortcuts.
 
 ## Backend Architecture (`test-pilot-server`)
 
@@ -186,6 +169,7 @@ Our codebase consists of two main repositories:
 - **`queries/`**: Database query functions organized by feature
 - **`controllers/`**: API route handlers
 - **`services/`**: Business logic and external API integrations
+
 - **`app.js`**: Main application file
 - **`server.js`**: Server startup file
 
@@ -239,24 +223,6 @@ Our codebase consists of two main repositories:
 - **Vite**: Fast development server and build tool
 - **Hot Module Replacement**: Instant updates during development
 - **ES6+ Support**: Modern JavaScript features
-
-## Cursor IDE Best Practices
-
-### CSS Rules
-- **Always use BEM naming conventions for CSS classes**
-- When creating new styles, follow the BEM methodology
-- Use semantic class names that describe the purpose, not appearance
-- Avoid inline styles unless absolutely necessary
-
-### Code Generation Guidelines
-- When using Cursor's AI assistance, always specify BEM naming for CSS
-- Review generated code for consistency with project standards
-- Ensure generated code follows established patterns
-
-### File Organization
-- Follow existing project structure
-- Use consistent naming conventions across files
-- Group related functionality together
 
 ## Development Workflow
 
