@@ -8,19 +8,7 @@ Our codebase consists of two main repositories:
 
 ## Tech Stack
 
-### Backend (`test-pilot-server`)
-- **Runtime**: Node.js with Express.js
-- **Database**: PostgreSQL with pgvector extension
-- **AI/ML**: OpenAI API integration with vector embeddings
-- **Authentication**: JWT with bcrypt
-- **Additional Services**: Google Cloud BigQuery, AWS S3, Nodemailer
-
-### Frontend (`pilot-client`) 
-- **Framework**: React with Vite build tool
-- **Routing**: React Router DOM
-- **Styling**: CSS with BEM naming conventions
-- **UI Components**: React Icons, React Calendar
-- **Language**: JavaScript (ES6+)
+For detailed information about our tech stack and architecture diagrams, please see [tech-stack-diagram.md](./tech-stack-diagram.md).
 
 ## Getting Started
 
