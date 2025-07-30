@@ -33,7 +33,7 @@ This diagram shows the builder/facilitator user journey and how they interact wi
 - **Connection**: Configured in `db/dbConfig.js`
 - **Mock Database**: Shared development environment (no local setup needed)
 
-For a more detailed view of our database schema and entity relationships, see [database-erd.md](../database-erd.md).
+For a more detailed view of our database schema and entity relationships, see [database-erd.md](./images/database-erd.md).
 
 ## Cloud Services
 - **GCP CloudSQL**: Managed PostgreSQL database
