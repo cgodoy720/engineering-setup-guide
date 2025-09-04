@@ -60,47 +60,6 @@ This document provides specific test scenarios for each smart task, covering dif
 
 </details>
 
-<details>
-<summary><strong>Task: "Deployment" (Technical Assistant Mode)</strong></summary>
-
-### Question 1: Deployment Basics
-**AI Asks:** "Let's start by understanding the basics: what does it mean to 'deploy' a website, and why would you want to deploy rather than just keep files on your computer?"
-
-**Happy Path Response:**
-"Deploying means making your website accessible to anyone on the internet by putting it on a web server. You'd want to deploy instead of keeping files local because other people can't see your work if it's just on your computer - deployment makes it publicly available with a URL that anyone can visit."
-
-**Expected AI Behavior:** Confirm understanding and move to exploring deployment options.
-
-**Neutral Path Response:**
-"It puts your website online somehow."
-
-**Expected AI Behavior:** Probe for understanding: "That's right! But why is that important? What's the difference between having a website on your computer versus having it online?"
-
-**Sad Path Response:**
-"I have no idea."
-
-**Expected AI Behavior:** Provide analogy: "Think of it like the difference between writing a letter and mailing it. Your website files are like a letter - if they stay on your computer, only you can read them. Deployment is like mailing the letter so others can read it. Does that help?"
-
-### Question 6: Deployment Success
-**AI Asks:** "GitHub should provide you with a live link to your site (usually https://username.github.io/repo-name/). Can you access your deployed website? How does it feel to see your code live on the internet?"
-
-**Happy Path Response:**
-"Yes! I can access it at https://myusername.github.io/my-site/. It's incredible to see my code actually working as a real website that anyone can visit. It makes the work feel much more real and professional."
-
-**Expected AI Behavior:** Celebrate success and move to exploring other platforms if time allows.
-
-**Neutral Path Response:**
-"Yeah it works."
-
-**Expected AI Behavior:** Encourage reflection: "That's great! What's different about seeing your site live versus just viewing the files locally? How does it change your perspective on the work you've done?"
-
-**Sad Path Response:**
-"It's not working."
-
-**Expected AI Behavior:** Troubleshoot: "Let's figure out what's happening. Can you tell me what you see when you try to visit the link? Is there an error message, or does it just not load?"
-
-</details>
-
 ---
 
 ## Day 2 Test Scenarios
@@ -192,43 +151,7 @@ This document provides specific test scenarios for each smart task, covering dif
 
 </details>
 
-### Question 2: Initial Performance Assessment
-**AI Asks:** "Use your blueprint to prompt your AI assistant and collect the initial response. How well did this first prompt perform? What did you notice about the quality and completeness of the response?"
 
-**Happy Path Response:**
-"I tested my disaster preparedness prompt and the AI provided a comprehensive risk assessment with specific climate data and infrastructure recommendations. The response was well-structured and included cost estimates, but I noticed it was quite generic and didn't account for our city's specific geography and existing infrastructure."
-
-**Expected AI Behavior:** Help identify specific improvement areas and move to refinement strategies.
-
-**Neutral Path Response:**
-"It was okay but not great."
-
-**Expected AI Behavior:** Probe for specifics: "What specifically made it just 'okay'? Was the information too general, missing key details, or formatted poorly? Help me understand what needs improvement."
-
-**Sad Path Response:**
-"It didn't work."
-
-**Expected AI Behavior:** Troubleshoot: "Let's figure out what went wrong. Can you share the prompt you used and tell me what kind of response you got? Was it completely off-topic, too short, or something else?"
-
-### Question 7: Meta-Prompting Experiment
-**AI Asks:** "Try meta-prompting: have the AI critique and improve its own output. Ask something like 'How could you improve this response?' What happens when you do this?"
-
-**Happy Path Response:**
-"When I asked the AI to critique its disaster plan, it identified that the response lacked specific local data, didn't prioritize recommendations by urgency, and used too much technical jargon. Then it provided a revised version with clearer language, priority rankings, and suggestions for where to find local climate data. The meta-prompting significantly improved the output quality."
-
-**Expected AI Behavior:** Acknowledge the successful technique and move to documentation.
-
-**Neutral Path Response:**
-"It made some changes."
-
-**Expected AI Behavior:** Probe for details: "What kind of changes did it make? Were they improvements? Can you give me a specific example of how the revised version was different from the original?"
-
-**Sad Path Response:**
-"I don't understand what meta-prompting means."
-
-**Expected AI Behavior:** Clarify concept: "Meta-prompting means asking the AI to think about its own response. Try asking your AI something like 'What are the weaknesses in the response you just gave me?' or 'How could you make that answer more useful?' Give it a try and tell me what happens."
-
-</details>
 
 ---
 
