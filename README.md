@@ -13,7 +13,8 @@ For detailed information about our tech stack and architecture diagrams, please 
 ## Getting Started
 
 ### Prerequisites
-- iTerm2 ([Download here](https://iterm2.com/))
+- [iTerm2](https://iterm2.com/)
+- [OhMyZsh](https://ohmyz.sh/)
 - Node.js (Download here [nodejs.org](https://nodejs.org/en/download))
 - Nodemon (in terminal run: `sudo npm i -g nodemon`, then enter your computer password and hit enter/return)
 - Git (pre-installed on Mac, verify with `git --version`)
@@ -193,13 +194,17 @@ For detailed information about our tech stack and architecture diagrams, please 
 - **`src/services/`**: API calls and external integrations
 - **`src/utils/`**: Helper functions and utilities
 
-### CSS Conventions
-- **BEM (Block Element Modifier) naming convention is mandatory**
-- Structure: `block__element--modifier`
+### Styling Conventions
+- **Tailwind CSS utility classes are the primary styling approach**
+- **shadcn/ui components** for pre-built, accessible UI components
+- Guidelines:
+  - Use Tailwind utility classes directly in JSX: `className="flex items-center gap-4 p-4"`
+  - Use shadcn/ui components from `src/components/ui/` for buttons, inputs, dialogs, etc.
+  - Keep custom CSS minimal; prefer Tailwind utilities
+  - Use `cn()` utility from `lib/utils` for conditional class merging
 - Examples:
-  - `.header` (block)
-  - `.header__nav` (element)
-  - `.header__nav--active` (modifier)
+  - `<Button variant="default">Click me</Button>` (shadcn button)
+  - `<div className="flex flex-col gap-2 rounded-lg bg-white p-4 shadow-md">` (Tailwind classes)
 
 ### Component Structure
 - Organize components logically by feature
@@ -284,7 +289,7 @@ For detailed information about our tech stack and architecture diagrams, please 
 ### Code Review Process
 - All code must be reviewed before merging
 - Check for adherence to coding standards
-- Verify BEM naming conventions in CSS changes
+- Verify proper use of Tailwind CSS and shadcn/ui components
 - Test functionality thoroughly
 
 ## Environment Management
@@ -301,7 +306,7 @@ For detailed information about our tech stack and architecture diagrams, please 
 #### Backend Required Variables:
 - `PG_*`: Database connection (actual mock database values provided in `.env.example`)
 - `SECRET`: JWT secret for authentication (placeholder in `.env.example`)
-- `OPENAI_API_KEY`: Required for AI features (ask team lead for actual key)
+- `OPENROUTER_API_KEY`: Required for AI features (ask team lead for actual key)
 - `FRONTEND_URL`: For CORS configuration (default value in `.env.example`)
 
 #### Backend Optional Variables:
@@ -348,11 +353,12 @@ For detailed information about our tech stack and architecture diagrams, please 
 - Use async/await for asynchronous operations
 - Follow consistent function naming conventions
 
-### CSS/SCSS
-- Use BEM methodology for all class names
-- Organize styles logically by component
-- Use variables for repeated values
-- Avoid overly specific selectors
+### Tailwind CSS & Styling
+- Use Tailwind CSS utility classes for styling
+- Use shadcn/ui components from `src/components/ui/` for common UI patterns
+- Keep component-specific CSS files minimal; prefer Tailwind utilities
+- Use CSS variables defined in `index.css` for theme colors
+- Follow responsive design patterns: `sm:`, `md:`, `lg:` breakpoint prefixes
 
 ### Database Operations
 - Always use parameterized queries
@@ -466,7 +472,8 @@ For detailed information about our tech stack and architecture diagrams, please 
 ## Resources
 
 ### Documentation
-- [BEM Methodology](http://getbem.com/) - CSS naming conventions
+- [Tailwind CSS](https://tailwindcss.com/docs) - Utility-first CSS framework
+- [shadcn/ui](https://ui.shadcn.com/) - Re-usable UI components
 - [React Documentation](https://react.dev/) - Frontend framework
 - [Express.js Guide](https://expressjs.com/) - Backend framework
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/) - Database

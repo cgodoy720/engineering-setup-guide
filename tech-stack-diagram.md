@@ -17,15 +17,16 @@ This diagram shows the builder/facilitator user journey and how they interact wi
 ### Backend (`test-pilot-server`)
 - **Runtime**: Node.js with Express.js
 - **Database**: PostgreSQL with pgvector extension
-- **AI/ML**: OpenAI API integration with vector embeddings
+- **AI/ML**: OpenRouter API integration with vector embeddings
 - **Authentication**: JWT with bcrypt
 - **Additional Services**: Google Cloud BigQuery, AWS S3, Nodemailer
 
 ### Frontend (`pilot-client`) 
 - **Framework**: React with Vite build tool
 - **Routing**: React Router DOM
-- **Styling**: CSS with BEM naming conventions
-- **UI Components**: React Icons, React Calendar
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **UI Libraries**: Material-UI (MUI), Radix UI, Lucide React icons, React Big Calendar
+- **State Management**: TanStack Query (React Query) for server state
 - **Language**: JavaScript (ES6+)
 
 ## Database Architecture
@@ -39,7 +40,7 @@ For a more detailed view of our database schema and entity relationships, see [d
 - **GCP CloudSQL**: Managed PostgreSQL database
 - **GCP BigQuery**: Data analytics and reporting
 - **GCP CloudRun**: Serverless container execution
-- **OpenAI API**: AI model access for GPT models
+- **OpenRouter API**: AI model access for multiple LLM providers
 
 ## API Architecture
 - All API endpoints use the `/api/` prefix
