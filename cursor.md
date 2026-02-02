@@ -15,13 +15,13 @@ Start a new conversation and provide Cursor with the full application context:
 ```
 I'm working on the Pursuit AI Native project. Here's the full context:
 
-@documentation/app-context.md
-@database-schema.sql
+@test-pilot-server/app-context.md
+@test-pilot-server/database-schema.sql
 
 I want to understand the codebase before making changes.
 ```
 
-**Why this works**: This gives Cursor immediate understanding of all 13 features, database structure, API patterns, and file organization.
+**Why this works**: This gives Cursor immediate understanding of all features, database structure, API patterns, and file organization.
 
 **Step 2: Explore Before You Build**
 
@@ -67,7 +67,7 @@ When ready to build, use this workflow:
 ### Quick Command Reference
 
 **Give Context to Cursor**:
-- `@documentation/app-context.md` - Full app overview
+- `@app-context.md` - Full app overview
 - `@database-schema.sql` - Complete database structure
 - `@documentation/README.md` - Setup and best practices
 - `@filename.js` - Reference any specific file
@@ -286,5 +286,3 @@ These rules ensure consistent code quality, proper workflow management, and clea
 - Reference the specific feature area (e.g., "Working on the attendance system")
 
 ---
-
-## Keyboard Shortcuts & Commands
