@@ -49,8 +49,8 @@ When ready to build, use this workflow:
    ```
    I need to add a new field "phone_number" to the user profile.
    
-   @documentation/app-context.md
-   @database-schema.sql
+   @test-pilot-server/app-context.md
+   @test-pilot-server/database-schema.sql
    
    Create a plan for:
    1. Adding the database column
@@ -69,17 +69,17 @@ When ready to build, use this workflow:
 **Give Context to Cursor**:
 - `@app-context.md` - Full app overview
 - `@database-schema.sql` - Complete database structure
-- `@documentation/README.md` - Setup and best practices
+- `@test-pilot-server/README.md` - Setup and best practices
 - `@filename.js` - Reference any specific file
 
 **Common First Prompts**:
 ```
-@documentation/app-context.md
+@test-pilot-server/app-context.md
 Explain how [feature name] works in this app.
 ```
 
 ```
-@documentation/app-context.md
+@test-pilot-server/app-context.md
 @database-schema.sql
 I need to add [feature]. Create a plan in Plan mode.
 ```
@@ -95,7 +95,7 @@ Let's say you want to add a "Notes" field to builder profiles:
 
 **1. Start with context:**
 ```
-@documentation/app-context.md
+@test-pilot-server/app-context.md
 @database-schema.sql
 
 I want to add a notes field to builder profiles where staff can add internal notes about each builder. What tables and files will I need to modify?
@@ -103,7 +103,7 @@ I want to add a notes field to builder profiles where staff can add internal not
 
 **2. Switch to Plan Mode and request a plan:**
 ```
-@documentation/app-context.md
+@test-pilot-server/app-context.md
 @database-schema.sql
 
 Create a plan to add a staff_notes TEXT field to user profiles:
@@ -123,7 +123,7 @@ Test the API endpoint for adding notes by calling POST /api/profile/notes
 ```
 [New conversation]
 
-@documentation/app-context.md
+@test-pilot-server/app-context.md
 Working on attendance reports. Show me the attendance system architecture.
 ```
 
@@ -166,7 +166,7 @@ Working on attendance reports. Show me the attendance system architecture.
 - **After major changes**: Begin new conversation after completing a significant feature
 - **Provide context**: In new chats, reference key files or provide brief context about what you're working on
 
-**Tip**: Use `@` to reference files and documentation to quickly give context to new conversations.
+**Tip**: Use `@` to reference files and test-pilot-server to quickly give context to new conversations.
 
 ---
 
@@ -202,7 +202,7 @@ These rules ensure consistent code quality, proper workflow management, and clea
 - **Always have the parent folder open**: This gives the AI context of both frontend and backend
 - **Use specific prompts**: Instead of "fix this," say "fix this component using Tailwind CSS utilities"
 - **Reference files with @**: Use `@filename` to give Cursor context about specific files
-- **Reference documentation**: Use `@documentation/` to include project docs in your prompt
+- **Reference test-pilot-server**: Use `@test-pilot-server/` to include project docs in your prompt
 - **Ask for explanations**: Use prompts like "explain how this database query works"
 - **Break down complex tasks**: Ask Cursor to tackle one piece at a time for better results
 
