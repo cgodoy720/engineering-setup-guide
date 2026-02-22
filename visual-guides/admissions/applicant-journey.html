@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Applicant Journey — Admissions Process</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Code+Pro:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-mono: 'Source Code Pro', 'SF Mono', Consolas, monospace;
+
+    --bg: #fdfcfb;
+    --surface: #ffffff;
+    --surface2: #f7f5f2;
+    --surface-elevated: #fffef9;
+    --border: rgba(0, 0, 0, 0.06);
+    --border-bright: rgba(0, 0, 0, 0.12);
+    --text: #1c1917;
+    --text-dim: #78716c;
+
+    --stage1: #2563eb;
+    --stage1-dim: rgba(37, 99, 235, 0.08);
+    --stage2: #7c3aed;
+    --stage2-dim: rgba(124, 58, 237, 0.08);
+    --stage3: #0891b2;
+    --stage3-dim: rgba(8, 145, 178, 0.08);
+    --stage4: #059669;
+    --stage4-dim: rgba(5, 150, 105, 0.08);
+    --stage5: #d97706;
+    --stage5-dim: rgba(217, 119, 6, 0.08);
+    --stage6: #dc2626;
+    --stage6-dim: rgba(220, 38, 38, 0.08);
+    --stage7: #16a34a;
+    --stage7-dim: rgba(22, 163, 74, 0.08);
+
+    --green: #16a34a;
+    --green-dim: rgba(22, 163, 74, 0.08);
+    --red: #dc2626;
+    --red-dim: rgba(220, 38, 38, 0.08);
+    --amber: #d97706;
+    --amber-dim: rgba(217, 119, 6, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0e0d;
+      --surface: #1a1918;
+      --surface2: #252321;
+      --surface-elevated: #2a2725;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #e7e5e4;
+      --text-dim: #a8a29e;
+
+      --stage1: #60a5fa;
+      --stage1-dim: rgba(96, 165, 250, 0.12);
+      --stage2: #c084fc;
+      --stage2-dim: rgba(192, 132, 252, 0.12);
+      --stage3: #22d3ee;
+      --stage3-dim: rgba(34, 211, 238, 0.1);
+      --stage4: #34d399;
+      --stage4-dim: rgba(52, 211, 153, 0.1);
+      --stage5: #fbbf24;
+      --stage5-dim: rgba(251, 191, 36, 0.1);
+      --stage6: #f87171;
+      --stage6-dim: rgba(248, 113, 113, 0.1);
+      --stage7: #4ade80;
+      --stage7-dim: rgba(74, 222, 128, 0.1);
+
+      --green: #4ade80;
+      --green-dim: rgba(74, 222, 128, 0.1);
+      --red: #f87171;
+      --red-dim: rgba(248, 113, 113, 0.1);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251, 191, 36, 0.1);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 50% 0%, var(--stage1-dim) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 100%, var(--stage7-dim) 0%, transparent 40%);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px;
+    min-height: 100vh;
+    overflow-wrap: break-word;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate {
+    animation: fadeUp 0.4s ease-out both;
+    animation-delay: calc(var(--i, 0) * 0.06s);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  .wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 0 40px;
+  }
+  .main { min-width: 0; }
+
+  .toc {
+    position: sticky; top: 24px; align-self: start; padding: 14px 0;
+    grid-row: 1 / -1; max-height: calc(100dvh - 48px); overflow-y: auto;
+  }
+  .toc::-webkit-scrollbar { width: 3px; }
+  .toc::-webkit-scrollbar-thumb { background: var(--surface-elevated); border-radius: 2px; }
+  .toc-title {
+    font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim);
+    padding: 0 0 10px; margin-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .toc a {
+    display: block; font-size: 11px; color: var(--text-dim); text-decoration: none;
+    padding: 4px 8px; border-radius: 5px; border-left: 2px solid transparent;
+    transition: all 0.15s; line-height: 1.4; margin-bottom: 1px;
+  }
+  .toc a:hover { color: var(--text); background: var(--surface2); }
+  .toc a.active { color: var(--text); border-left-color: var(--stage1); }
+
+  h1 {
+    font-family: var(--font-display); font-size: 42px; font-weight: 700;
+    letter-spacing: -0.5px; margin-bottom: 6px; text-wrap: balance;
+  }
+  .subtitle {
+    color: var(--text-dim); font-family: var(--font-mono);
+    font-size: 12px; margin-bottom: 12px;
+  }
+  .intro {
+    font-size: 15px; line-height: 1.7; color: var(--text-dim);
+    margin-bottom: 36px; max-width: 760px;
+  }
+  .intro strong { color: var(--text); }
+
+  .sec-head {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px; padding: 10px 0;
+    margin-top: 32px; margin-bottom: 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px; scroll-margin-top: 20px;
+  }
+  .sec-head .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+  .mermaid-wrap {
+    position: relative; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 32px 24px; overflow: auto; margin-bottom: 20px;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+  .mermaid-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
+  .mermaid-wrap::-webkit-scrollbar-track { background: transparent; }
+  .mermaid-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .mermaid-wrap .mermaid {
+    display: flex; justify-content: center; transition: transform 0.2s ease;
+    transform-origin: top center;
+  }
+  .mermaid-wrap.is-zoomed { cursor: grab; }
+  .mermaid-wrap.is-panning { cursor: grabbing; user-select: none; }
+
+  .zoom-controls {
+    position: absolute; top: 8px; right: 8px; display: flex; gap: 2px;
+    z-index: 10; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2px;
+  }
+  .zoom-controls button {
+    width: 28px; height: 28px; border: none; background: transparent;
+    color: var(--text-dim); font-family: var(--font-mono); font-size: 14px;
+    cursor: pointer; border-radius: 4px; display: flex; align-items: center;
+    justify-content: center; transition: background 0.15s ease, color 0.15s ease;
+  }
+  .zoom-controls button:hover { background: var(--border); color: var(--text); }
+
+  .mermaid .nodeLabel { color: var(--text) !important; font-family: var(--font-body) !important; font-size: 14px !important; }
+  .mermaid .edgeLabel { color: var(--text-dim) !important; background-color: var(--bg) !important; font-family: var(--font-mono) !important; font-size: 12px !important; }
+  .mermaid .edgeLabel rect { fill: var(--bg) !important; }
+
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 24px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-bright);
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .tl-item:last-child { margin-bottom: 0; }
+
+  .tl-marker {
+    position: absolute;
+    left: -33px;
+    top: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    z-index: 1;
+  }
+
+  .tl-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .tl-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .tl-card__title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tl-card__stage {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .tl-card__route {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    margin-bottom: 8px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  .tl-card__desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+
+  .tl-card__desc strong { color: var(--text); }
+
+  .tl-card__outcomes {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .outcome {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+
+  .outcome--pass { background: var(--green-dim); color: var(--green); }
+  .outcome--fail { background: var(--red-dim); color: var(--red); }
+  .outcome--wait { background: var(--amber-dim); color: var(--amber); }
+
+  .branch-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .branch-card h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .branch-card p {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .status-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .status-card__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .status-card__desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 1000px) {
+    .wrap { grid-template-columns: 1fr; padding-top: 0; }
+    body { padding-top: 0; }
+    .toc {
+      position: sticky; top: 0; z-index: 200; max-height: none;
+      display: flex; gap: 4px; align-items: center;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 10px 0; margin: 0 -40px; padding-left: 40px; padding-right: 40px;
+      grid-row: auto;
+    }
+    .toc::-webkit-scrollbar { display: none; }
+    .toc-title { display: none; }
+    .toc a {
+      white-space: nowrap; flex-shrink: 0; border-left: none;
+      border-bottom: 2px solid transparent; border-radius: 4px 4px 0 0;
+      padding: 6px 10px; font-size: 10px;
+    }
+    .toc a.active { border-left: none; border-bottom-color: var(--stage1); background: var(--surface); }
+    .main { padding-top: 20px; }
+    .sec-head { scroll-margin-top: 52px; }
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 20px; }
+    h1 { font-size: 28px; }
+    .status-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="toc" id="toc">
+    <div class="toc-title">Journey</div>
+    <a href="#s1">1. Flow Diagram</a>
+    <a href="#s2">2. Stage-by-Stage</a>
+    <a href="#s3">3. Decision Branches</a>
+    <a href="#s4">4. Stage Values</a>
+    <a href="#s5">5. Admission Statuses</a>
+  </nav>
+
+  <div class="main">
+
+    <h1 class="animate" style="--i:0">Applicant Journey</h1>
+    <p class="subtitle animate" style="--i:1">the full admissions process &mdash; from signup to program onboarding</p>
+    <p class="intro animate" style="--i:2">
+      Applicants progress through a defined pipeline with <strong>7 major stages</strong>.
+      The journey is tracked in the <strong>applicant_stage</strong> table, which holds both the
+      <strong>current_stage</strong> (where they are in the process) and <strong>program_admission_status</strong>
+      (their acceptance outcome). Each stage unlocks new actions on the applicant dashboard.
+    </p>
+
+    <!-- ─── 1. FLOW DIAGRAM ─── -->
+    <div id="s1" class="sec-head animate" style="--i:3">
+      <span class="dot" style="background:var(--stage1)"></span> 1 &mdash; Complete Flow Diagram
+    </div>
+
+    <div class="mermaid-wrap animate" style="--i:4">
+      <div class="zoom-controls">
+        <button onclick="zoomDiagram(this, 1.2)" title="Zoom in">+</button>
+        <button onclick="zoomDiagram(this, 0.8)" title="Zoom out">&minus;</button>
+        <button onclick="resetZoom(this)" title="Reset zoom">&#8634;</button>
+      </div>
+      <pre class="mermaid">
+flowchart TD
+  A["1. Signup"] --> B["Email Verification"]
+  B --> C["2. Applicant Dashboard"]
+  C --> D["3. Info Session Registration"]
+  D --> E{Attended?}
+  E -->|Yes| F["info_session_attended"]
+  E -->|No Show| G["info_session_no_show"]
+  G -.->|Can re-register| D
+
+  F --> H["4. Application Form"]
+  H --> I["Eligibility Check"]
+  I -->|Eligible| J["application_submitted"]
+  I -->|Ineligible| K["Application Rejected"]
+  K -.->|Edit eligibility| I
+
+  J --> L["AI Analysis + Human Review"]
+  L --> M["application_under_review"]
+
+  M --> N{Decision}
+  N -->|Invite| O["5. Workshop Invited"]
+  N -->|Reject| P["Rejected"]
+  N -->|Waitlist| Q["Waitlisted"]
+
+  O --> R["Workshop Registration"]
+  R --> S{Attended?}
+  S -->|Yes| T["workshop_attended"]
+  S -->|No Show| U["workshop_no_show"]
+
+  T --> V{Program Decision}
+  V -->|Accept| W["6. Pledge"]
+  V -->|Reject| P
+  V -->|Defer| X["Deferred to Next Cohort"]
+
+  W --> Y["Pledge Completed"]
+  Y --> Z["7. Onboarding"]
+  Z --> AA["Builder Account Created"]
+  AA --> AB["Main Application"]
+
+  X -.->|Next cohort| O
+      </pre>
+    </div>
+
+    <!-- ─── 2. STAGE-BY-STAGE ─── -->
+    <div id="s2" class="sec-head animate" style="--i:5">
+      <span class="dot" style="background:var(--stage2)"></span> 2 &mdash; Stage-by-Stage Breakdown
+    </div>
+
+    <div class="timeline animate" style="--i:6">
+
+      <div class="tl-item">
+        <div class="tl-marker" style="background:var(--stage1);">1</div>
+        <div class="tl-card" style="border-left: 3px solid var(--stage1);">
+          <div class="tl-card__title">
+            Account Creation
+            <span class="tl-card__stage" style="background:var(--stage1-dim); color:var(--stage1);">signup</span>
+          </div>
+          <span class="tl-card__route" style="background:var(--stage1-dim); color:var(--stage1);">/apply/signup</span>
+          <div class="tl-card__desc">
+            The applicant creates an account with their name, email, and password. A <strong>verification email</strong>
+            is sent. They must verify before accessing the dashboard. Referral source and NYCHA residency are captured.
+          </div>
+          <div class="tl-card__outcomes">
+            <span class="outcome outcome--pass">Verified &rarr; Dashboard</span>
+            <span class="outcome outcome--fail">Unverified &rarr; Blocked</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-marker" style="background:var(--stage2);">2</div>
+        <div class="tl-card" style="border-left: 3px solid var(--stage2);">
+          <div class="tl-card__title">
+            Info Session
+            <span class="tl-card__stage" style="background:var(--stage2-dim); color:var(--stage2);">info_session_registered</span>
+          </div>
+          <span class="tl-card__route" style="background:var(--stage2-dim); color:var(--stage2);">/info-sessions</span>
+          <div class="tl-card__desc">
+            The applicant browses available info sessions and registers for one. Sessions can be in-person
+            (at Pursuit HQ in Long Island City) or online. Capacity is tracked. <strong>Attendance is required</strong>
+            before the application will be considered.
+          </div>
+          <div class="tl-card__outcomes">
+            <span class="outcome outcome--pass">Attended</span>
+            <span class="outcome outcome--fail">No Show</span>
+            <span class="outcome outcome--wait">Registered</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-marker" style="background:var(--stage3);">3</div>
+        <div class="tl-card" style="border-left: 3px solid var(--stage3);">
+          <div class="tl-card__title">
+            Application
+            <span class="tl-card__stage" style="background:var(--stage3-dim); color:var(--stage3);">application_submitted</span>
+          </div>
+          <span class="tl-card__route" style="background:var(--stage3-dim); color:var(--stage3);">/application-form</span>
+          <div class="tl-card__desc">
+            Multi-section form with <strong>auto-save</strong> (1-second debounce). Includes an <strong>eligibility check</strong>
+            that validates age, income, location, work authorization, commute ability, and schedule availability.
+            If ineligible, the application is immediately marked as such and a rejection email is sent. If eligible,
+            the application proceeds to submission. Progress is tracked across sections.
+          </div>
+          <div class="tl-card__outcomes">
+            <span class="outcome outcome--pass">Submitted</span>
+            <span class="outcome outcome--fail">Ineligible</span>
+            <span class="outcome outcome--wait">Draft / In Progress</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-marker" style="background:var(--stage4);">4</div>
+        <div class="tl-card" style="border-left: 3px solid var(--stage4);">
+          <div class="tl-card__title">
+            Review &amp; Workshop
+            <span class="tl-card__stage" style="background:var(--stage4-dim); color:var(--stage4);">workshop_invited</span>
+          </div>
+          <span class="tl-card__route" style="background:var(--stage4-dim); color:var(--stage4);">/workshops</span>
+          <div class="tl-card__desc">
+            After submission, the application undergoes <strong>AI analysis</strong> (scoring for learning aptitude,
+            grit, and critical thinking) followed by <strong>human review</strong>. Staff use deliberation flags
+            (yes/maybe/no) to decide. Eligible applicants are <strong>invited to a workshop</strong>. The workshop
+            card on the applicant dashboard unlocks. Applicants select a timeslot and indicate laptop needs.
+            The "Enter Workshop" action converts the applicant to a <strong>builder account</strong> and grants
+            access to the workshop learning environment.
+          </div>
+          <div class="tl-card__outcomes">
+            <span class="outcome outcome--pass">Workshop Attended</span>
+            <span class="outcome outcome--fail">No Show</span>
+            <span class="outcome outcome--fail">Rejected</span>
+            <span class="outcome outcome--wait">Waitlisted</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-marker" style="background:var(--stage5);">5</div>
+        <div class="tl-card" style="border-left: 3px solid var(--stage5);">
+          <div class="tl-card__title">
+            Program Decision
+            <span class="tl-card__stage" style="background:var(--stage5-dim); color:var(--stage5);">program_admission_status</span>
+          </div>
+          <div class="tl-card__desc">
+            After the workshop, staff make a <strong>final admission decision</strong>. This is stored
+            separately from the stage as <code style="background:var(--stage5-dim); color:var(--stage5);">program_admission_status</code>.
+            Possible outcomes: <strong>accepted</strong>, <strong>rejected</strong>, <strong>waitlisted</strong>,
+            <strong>withdrawn</strong>, or <strong>deferred</strong> (rolled to the next cohort). Deferred applicants
+            re-enter the pipeline at the workshop invitation stage for the next cohort.
+          </div>
+          <div class="tl-card__outcomes">
+            <span class="outcome outcome--pass">Accepted</span>
+            <span class="outcome outcome--fail">Rejected</span>
+            <span class="outcome outcome--wait">Waitlisted</span>
+            <span class="outcome outcome--wait">Deferred</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-marker" style="background:var(--stage6);">6</div>
+        <div class="tl-card" style="border-left: 3px solid var(--stage6);">
+          <div class="tl-card__title">
+            Pledge
+            <span class="tl-card__stage" style="background:var(--stage6-dim); color:var(--stage6);">pledge_completed</span>
+          </div>
+          <span class="tl-card__route" style="background:var(--stage6-dim); color:var(--stage6);">/pledge</span>
+          <div class="tl-card__desc">
+            Accepted applicants complete a <strong>6-step pledge wizard</strong>: Introduction, Learning commitments,
+            Community commitments (with Code of Conduct acknowledgment), Building commitments, Personal Information
+            (name, email, phone, DOB), and a <strong>Signature</strong> (canvas-based with touch support).
+            The pledge card replaces the workshop card on the dashboard.
+          </div>
+          <div class="tl-card__outcomes">
+            <span class="outcome outcome--pass">Pledge Completed</span>
+            <span class="outcome outcome--wait">Pending</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-marker" style="background:var(--stage7);">7</div>
+        <div class="tl-card" style="border-left: 3px solid var(--stage7);">
+          <div class="tl-card__title">
+            Onboarding
+            <span class="tl-card__stage" style="background:var(--stage7-dim); color:var(--stage7);">onboarding</span>
+          </div>
+          <span class="tl-card__route" style="background:var(--stage7-dim); color:var(--stage7);">/onboarding</span>
+          <div class="tl-card__desc">
+            After the pledge, the onboarding card appears on the dashboard (replacing the pledge card).
+            <strong>8 tasks</strong> must be completed: Program Details &amp; Requirements, Attendance Policy &amp;
+            Calendar, Join Slack, Set Up Pursuit Email, Google Calendar, Download Kisi, Building in Public,
+            and Engage with Tech News. When all required tasks are done, the applicant can
+            <strong>create their builder account</strong> and transition to the main application as a full member.
+          </div>
+          <div class="tl-card__outcomes">
+            <span class="outcome outcome--pass">Builder Account Created</span>
+            <span class="outcome outcome--wait">In Progress</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── 3. DECISION BRANCHES ─── -->
+    <div id="s3" class="sec-head animate" style="--i:7">
+      <span class="dot" style="background:var(--red)"></span> 3 &mdash; Decision Branches
+    </div>
+
+    <div class="branch-card animate" style="--i:8; border-left: 3px solid var(--red);">
+      <h4><span style="color:var(--red);">Ineligible</span> at Application Stage</h4>
+      <p>
+        If the eligibility check fails (age, income, location, work auth, commute, or schedule),
+        the application status is set to <strong>ineligible</strong> and a rejection email is sent.
+        The applicant can edit their eligibility responses and re-check. A full reapply option
+        exists for previously rejected applicants.
+      </p>
+    </div>
+
+    <div class="branch-card animate" style="--i:9; border-left: 3px solid var(--amber);">
+      <h4><span style="color:var(--amber);">Deferred</span> to Next Cohort</h4>
+      <p>
+        Staff can defer an applicant to a future cohort. The <strong>deferred</strong> flag is set,
+        along with <strong>deferred_from_cohort_id</strong>. Rollover tracking records the cohort
+        history (<strong>rollover_cohorts</strong> array, <strong>rollover_count</strong>). When the
+        next cohort opens, deferred applicants re-enter at the workshop invitation stage.
+      </p>
+    </div>
+
+    <div class="branch-card animate" style="--i:10; border-left: 3px solid var(--stage2);">
+      <h4><span style="color:var(--stage2);">No Show</span> Recovery</h4>
+      <p>
+        If an applicant no-shows an info session or workshop, their stage is updated accordingly
+        (info_session_no_show or workshop_no_show). Info session no-shows can re-register for a
+        different session. Workshop no-shows typically require manual intervention by staff.
+      </p>
+    </div>
+
+    <!-- ─── 4. STAGE VALUES ─── -->
+    <div id="s4" class="sec-head animate" style="--i:11">
+      <span class="dot" style="background:var(--stage3)"></span> 4 &mdash; Stage Values (applicant_stage.current_stage)
+    </div>
+
+    <div class="status-grid animate" style="--i:12">
+      <div class="status-card" style="border-left: 3px solid var(--stage2);">
+        <div class="status-card__label" style="color:var(--stage2);">info_session_registered</div>
+        <div class="status-card__desc">Signed up for an info session, hasn't attended yet</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--stage2);">
+        <div class="status-card__label" style="color:var(--stage2);">info_session_attended</div>
+        <div class="status-card__desc">Attended an info session, ready to apply</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--red);">
+        <div class="status-card__label" style="color:var(--red);">info_session_no_show</div>
+        <div class="status-card__desc">Registered but did not attend info session</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--stage3);">
+        <div class="status-card__label" style="color:var(--stage3);">application_submitted</div>
+        <div class="status-card__desc">Application submitted, awaiting review</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--stage3);">
+        <div class="status-card__label" style="color:var(--stage3);">application_under_review</div>
+        <div class="status-card__desc">Under AI + human review</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--stage4);">
+        <div class="status-card__label" style="color:var(--stage4);">workshop_invited</div>
+        <div class="status-card__desc">Invited to attend a workshop</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--stage4);">
+        <div class="status-card__label" style="color:var(--stage4);">workshop_registered</div>
+        <div class="status-card__desc">Registered for a specific workshop timeslot</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--green);">
+        <div class="status-card__label" style="color:var(--green);">workshop_attended</div>
+        <div class="status-card__desc">Attended the workshop, awaiting program decision</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--red);">
+        <div class="status-card__label" style="color:var(--red);">workshop_no_show</div>
+        <div class="status-card__desc">Registered but did not attend workshop</div>
+      </div>
+    </div>
+
+    <!-- ─── 5. ADMISSION STATUSES ─── -->
+    <div id="s5" class="sec-head animate" style="--i:13">
+      <span class="dot" style="background:var(--stage5)"></span> 5 &mdash; Program Admission Statuses
+    </div>
+
+    <div class="status-grid animate" style="--i:14">
+      <div class="status-card" style="border-left: 3px solid var(--amber);">
+        <div class="status-card__label" style="color:var(--amber);">pending</div>
+        <div class="status-card__desc">Default state. No decision has been made yet.</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--green);">
+        <div class="status-card__label" style="color:var(--green);">accepted</div>
+        <div class="status-card__desc">Admitted to the program. Unlocks pledge and onboarding.</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--red);">
+        <div class="status-card__label" style="color:var(--red);">rejected</div>
+        <div class="status-card__desc">Not admitted. Can reapply for a future cohort.</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--stage2);">
+        <div class="status-card__label" style="color:var(--stage2);">waitlisted</div>
+        <div class="status-card__desc">On hold. May be admitted if spots open.</div>
+      </div>
+      <div class="status-card" style="border-left: 3px solid var(--text-dim);">
+        <div class="status-card__label" style="color:var(--text-dim);">withdrawn</div>
+        <div class="status-card__desc">Applicant chose to leave the process.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  import elkLayouts from 'https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk/dist/mermaid-layout-elk.esm.min.mjs';
+
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  mermaid.registerLayoutLoaders(elkLayouts);
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    look: 'handDrawn',
+    layout: 'elk',
+    themeVariables: {
+      primaryColor: isDark ? '#1e3a5f' : '#dbeafe',
+      primaryBorderColor: isDark ? '#60a5fa' : '#2563eb',
+      primaryTextColor: isDark ? '#e7e5e4' : '#1c1917',
+      secondaryColor: isDark ? '#1c2333' : '#f0fdf4',
+      secondaryBorderColor: isDark ? '#34d399' : '#059669',
+      secondaryTextColor: isDark ? '#e7e5e4' : '#1c1917',
+      tertiaryColor: isDark ? '#27201a' : '#fef3c7',
+      tertiaryBorderColor: isDark ? '#fbbf24' : '#d97706',
+      tertiaryTextColor: isDark ? '#e7e5e4' : '#1c1917',
+      lineColor: isDark ? '#a8a29e' : '#78716c',
+      fontSize: '14px',
+      fontFamily: "'DM Sans', system-ui, sans-serif",
+    }
+  });
+</script>
+<script>
+  function updateZoomState(wrap) {
+    var target = wrap.querySelector('.mermaid');
+    var zoom = parseFloat(target.dataset.zoom || '1');
+    wrap.classList.toggle('is-zoomed', zoom > 1);
+  }
+  function zoomDiagram(btn, factor) {
+    var wrap = btn.closest('.mermaid-wrap');
+    var target = wrap.querySelector('.mermaid');
+    var current = parseFloat(target.dataset.zoom || '1');
+    var next = Math.min(Math.max(current * factor, 0.3), 5);
+    target.dataset.zoom = next;
+    target.style.transform = 'scale(' + next + ')';
+    updateZoomState(wrap);
+  }
+  function resetZoom(btn) {
+    var wrap = btn.closest('.mermaid-wrap');
+    var target = wrap.querySelector('.mermaid');
+    target.dataset.zoom = '1';
+    target.style.transform = 'scale(1)';
+    updateZoomState(wrap);
+  }
+  document.querySelectorAll('.mermaid-wrap').forEach(function(wrap) {
+    wrap.addEventListener('wheel', function(e) {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      var target = wrap.querySelector('.mermaid');
+      var current = parseFloat(target.dataset.zoom || '1');
+      var factor = e.deltaY < 0 ? 1.1 : 0.9;
+      var next = Math.min(Math.max(current * factor, 0.3), 5);
+      target.dataset.zoom = next;
+      target.style.transform = 'scale(' + next + ')';
+      updateZoomState(wrap);
+    }, { passive: false });
+    var startX, startY, scrollL, scrollT;
+    wrap.addEventListener('mousedown', function(e) {
+      if (e.target.closest('.zoom-controls')) return;
+      var target = wrap.querySelector('.mermaid');
+      if (parseFloat(target.dataset.zoom || '1') <= 1) return;
+      wrap.classList.add('is-panning');
+      startX = e.clientX; startY = e.clientY;
+      scrollL = wrap.scrollLeft; scrollT = wrap.scrollTop;
+    });
+    window.addEventListener('mousemove', function(e) {
+      if (!wrap.classList.contains('is-panning')) return;
+      wrap.scrollLeft = scrollL - (e.clientX - startX);
+      wrap.scrollTop = scrollT - (e.clientY - startY);
+    });
+    window.addEventListener('mouseup', function() { wrap.classList.remove('is-panning'); });
+  });
+</script>
+<script>
+(function() {
+  var toc = document.getElementById('toc');
+  var links = toc.querySelectorAll('a');
+  var sections = [];
+  links.forEach(function(link) {
+    var id = link.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) sections.push({ id: id, el: el, link: link });
+  });
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        links.forEach(function(l) { l.classList.remove('active'); });
+        var match = sections.find(function(s) { return s.el === entry.target; });
+        if (match) {
+          match.link.classList.add('active');
+          if (window.innerWidth <= 1000) {
+            match.link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s) { observer.observe(s.el); });
+  links.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = link.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', '#' + id); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

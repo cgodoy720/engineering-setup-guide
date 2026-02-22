@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admissions Database Schema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'Sora', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface2: #f1f5f9;
+    --surface-elevated: #ffffff;
+    --border: rgba(0, 0, 0, 0.06);
+    --border-bright: rgba(0, 0, 0, 0.12);
+    --text: #0f172a;
+    --text-dim: #64748b;
+    --identity: #7c3aed;
+    --identity-dim: rgba(124, 58, 237, 0.08);
+    --form: #2563eb;
+    --form-dim: rgba(37, 99, 235, 0.08);
+    --events: #0891b2;
+    --events-dim: rgba(8, 145, 178, 0.08);
+    --analysis: #d97706;
+    --analysis-dim: rgba(217, 119, 6, 0.08);
+    --leads: #059669;
+    --leads-dim: rgba(5, 150, 105, 0.08);
+    --onboard: #dc2626;
+    --onboard-dim: rgba(220, 38, 38, 0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c0f17;
+      --surface: #141826;
+      --surface2: #1c2035;
+      --surface-elevated: #222740;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-bright: rgba(255, 255, 255, 0.12);
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --identity: #c084fc;
+      --identity-dim: rgba(192, 132, 252, 0.12);
+      --form: #60a5fa;
+      --form-dim: rgba(96, 165, 250, 0.12);
+      --events: #22d3ee;
+      --events-dim: rgba(34, 211, 238, 0.1);
+      --analysis: #fbbf24;
+      --analysis-dim: rgba(251, 191, 36, 0.1);
+      --leads: #34d399;
+      --leads-dim: rgba(52, 211, 153, 0.1);
+      --onboard: #f87171;
+      --onboard-dim: rgba(248, 113, 113, 0.12);
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 40px;
+    min-height: 100vh;
+    overflow-wrap: break-word;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate { animation: fadeUp 0.4s ease-out both; animation-delay: calc(var(--i, 0) * 0.06s); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
+  }
+  .wrap { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 170px 1fr; gap: 0 40px; }
+  .main { min-width: 0; }
+  .toc { position: sticky; top: 24px; align-self: start; padding: 14px 0; grid-row: 1 / -1; max-height: calc(100dvh - 48px); overflow-y: auto; }
+  .toc::-webkit-scrollbar { width: 3px; }
+  .toc::-webkit-scrollbar-thumb { background: var(--surface-elevated); border-radius: 2px; }
+  .toc-title { font-family: var(--font-mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); padding: 0 0 10px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .toc a { display: block; font-size: 11px; color: var(--text-dim); text-decoration: none; padding: 4px 8px; border-radius: 5px; border-left: 2px solid transparent; transition: all 0.15s; line-height: 1.4; margin-bottom: 1px; }
+  .toc a:hover { color: var(--text); background: var(--surface2); }
+  .toc a.active { color: var(--text); border-left-color: var(--identity); }
+
+  h1 { font-size: 36px; font-weight: 700; letter-spacing: -1px; margin-bottom: 6px; text-wrap: balance; }
+  .subtitle { color: var(--text-dim); font-family: var(--font-mono); font-size: 12px; margin-bottom: 12px; }
+  .intro { font-size: 15px; line-height: 1.7; color: var(--text-dim); margin-bottom: 36px; max-width: 760px; }
+  .intro strong { color: var(--text); }
+
+  .sec-head { font-family: var(--font-mono); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; padding: 10px 0; margin-top: 32px; margin-bottom: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; scroll-margin-top: 20px; }
+  .sec-head .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+  .mermaid-wrap { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px 24px; overflow: auto; margin-bottom: 20px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .mermaid-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
+  .mermaid-wrap::-webkit-scrollbar-track { background: transparent; }
+  .mermaid-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .mermaid-wrap .mermaid { display: flex; justify-content: center; transition: transform 0.2s ease; transform-origin: top center; }
+  .mermaid-wrap.is-zoomed { cursor: grab; }
+  .mermaid-wrap.is-panning { cursor: grabbing; user-select: none; }
+  .zoom-controls { position: absolute; top: 8px; right: 8px; display: flex; gap: 2px; z-index: 10; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px; }
+  .zoom-controls button { width: 28px; height: 28px; border: none; background: transparent; color: var(--text-dim); font-family: var(--font-mono); font-size: 14px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease, color 0.15s ease; }
+  .zoom-controls button:hover { background: var(--border); color: var(--text); }
+
+  .mermaid .nodeLabel { color: var(--text) !important; font-family: var(--font-body) !important; font-size: 13px !important; }
+  .mermaid .edgeLabel { color: var(--text-dim) !important; background-color: var(--bg) !important; font-family: var(--font-mono) !important; font-size: 11px !important; }
+  .mermaid .edgeLabel rect { fill: var(--bg) !important; }
+
+  .table-group { margin-bottom: 24px; }
+  .table-group-title { font-weight: 600; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .table-group-title .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+  .schema-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+  .schema-card__header { font-family: var(--font-mono); font-size: 13px; font-weight: 600; padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
+  .schema-card__body { border-top: 1px solid var(--border); }
+
+  .col-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .col-table th { font-family: var(--font-mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); text-align: left; padding: 8px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .col-table td { padding: 6px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .col-table tbody tr:last-child td { border-bottom: none; }
+  .col-table .col-name { font-family: var(--font-mono); font-weight: 500; font-size: 12px; }
+  .col-table .col-type { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
+  .col-table .col-pk { font-family: var(--font-mono); font-size: 9px; font-weight: 600; background: var(--identity-dim); color: var(--identity); padding: 1px 5px; border-radius: 3px; }
+  .col-table .col-fk { font-family: var(--font-mono); font-size: 9px; font-weight: 600; background: var(--form-dim); color: var(--form); padding: 1px 5px; border-radius: 3px; }
+  .col-table .col-uq { font-family: var(--font-mono); font-size: 9px; font-weight: 600; background: var(--events-dim); color: var(--events); padding: 1px 5px; border-radius: 3px; }
+
+  details.collapsible { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+  details.collapsible summary { padding: 14px 20px; background: var(--surface); font-family: var(--font-mono); font-size: 12px; font-weight: 600; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; color: var(--text); transition: background 0.15s ease; }
+  details.collapsible summary:hover { background: var(--surface-elevated); }
+  details.collapsible summary::-webkit-details-marker { display: none; }
+  details.collapsible summary::before { content: '\25B8'; font-size: 11px; color: var(--text-dim); transition: transform 0.15s ease; }
+  details.collapsible[open] summary::before { transform: rotate(90deg); }
+  details.collapsible .collapsible__body { padding: 0; border-top: 1px solid var(--border); }
+
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
+  .legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
+
+  @media (max-width: 1000px) {
+    .wrap { grid-template-columns: 1fr; padding-top: 0; }
+    body { padding-top: 0; }
+    .toc { position: sticky; top: 0; z-index: 200; max-height: none; display: flex; gap: 4px; align-items: center; overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--bg); border-bottom: 1px solid var(--border); padding: 10px 0; margin: 0 -40px; padding-left: 40px; padding-right: 40px; grid-row: auto; }
+    .toc::-webkit-scrollbar { display: none; }
+    .toc-title { display: none; }
+    .toc a { white-space: nowrap; flex-shrink: 0; border-left: none; border-bottom: 2px solid transparent; border-radius: 4px 4px 0 0; padding: 6px 10px; font-size: 10px; }
+    .toc a.active { border-left: none; border-bottom-color: var(--identity); background: var(--surface); }
+    .main { padding-top: 20px; }
+    .sec-head { scroll-margin-top: 52px; }
+  }
+  @media (max-width: 768px) {
+    body { padding: 20px; }
+    h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="toc" id="toc">
+    <div class="toc-title">Schema</div>
+    <a href="#s1">1. ER Diagram</a>
+    <a href="#s2">2. Identity Tables</a>
+    <a href="#s3">3. Application Tables</a>
+    <a href="#s4">4. Event Tables</a>
+    <a href="#s5">5. Analysis &amp; Leads</a>
+    <a href="#s6">6. Onboarding</a>
+  </nav>
+
+  <div class="main">
+
+    <h1 class="animate" style="--i:0">Database Schema</h1>
+    <p class="subtitle animate" style="--i:1">admissions system &mdash; 22 tables across 6 domains</p>
+    <p class="intro animate" style="--i:2">
+      The admissions database is built on <strong>PostgreSQL</strong> with 22 tables organized into
+      six logical groups: identity, application form, events, analysis, leads, and onboarding.
+      See <strong>schema.sql</strong> in this folder for the complete DDL.
+    </p>
+
+    <!-- ─── 1. ER DIAGRAM ─── -->
+    <div id="s1" class="sec-head animate" style="--i:3">
+      <span class="dot" style="background:var(--identity)"></span> 1 &mdash; Entity Relationship Diagram
+    </div>
+
+    <div class="legend animate" style="--i:4">
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--identity)"></div> Identity</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--form)"></div> Application</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--events)"></div> Events</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--analysis)"></div> Analysis</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--leads)"></div> Leads</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:var(--onboard)"></div> Onboarding</div>
+    </div>
+
+    <div class="mermaid-wrap animate" style="--i:5">
+      <div class="zoom-controls">
+        <button onclick="zoomDiagram(this, 1.2)" title="Zoom in">+</button>
+        <button onclick="zoomDiagram(this, 0.8)" title="Zoom out">&minus;</button>
+        <button onclick="resetZoom(this)" title="Reset zoom">&#8634;</button>
+      </div>
+      <pre class="mermaid">
+erDiagram
+    applicant ||--o{ application : has
+    applicant ||--o| applicant_stage : tracks
+    applicant ||--o{ applicant_notes : has
+    applicant ||--o| applicant_email_mapping : maps
+    applicant ||--o{ event_registration : registers
+    applicant ||--o{ email_automation_log : receives
+    applicant ||--o{ applicant_onboarding_task_completions : completes
+
+    application ||--o{ response : contains
+    application ||--o{ application_analysis : analyzed_by
+
+    section ||--o{ question : contains
+    question ||--o{ choice_option : has
+    question ||--o{ response : answered_by
+
+    event ||--o{ event_registration : has
+
+    lead ||--o{ lead_source : from
+    lead ||--o{ lead_engagement : tracks
+    lead ||--o{ lead_note : has
+    lead ||--o{ lead_email_list : subscribed
+
+    onboarding_tasks ||--o{ applicant_onboarding_task_completions : completed_by
+
+    applicant {
+        serial applicant_id PK
+        varchar email UK
+        varchar first_name
+        varchar last_name
+        varchar password_hash
+        boolean verified
+        varchar referral_source
+    }
+
+    applicant_stage {
+        uuid stage_id PK
+        integer applicant_id FK
+        varchar current_stage
+        varchar program_admission_status
+        boolean pledge_completed
+        boolean deferred
+        varchar deliberation
+        uuid current_cohort_id FK
+    }
+
+    application {
+        serial application_id PK
+        integer applicant_id FK
+        varchar status
+        timestamp submitted_at
+    }
+
+    section {
+        integer section_id PK
+        varchar name
+        integer display_order
+    }
+
+    question {
+        integer question_id PK
+        integer section_id FK
+        text prompt
+        varchar response_type
+        boolean is_required
+        boolean active
+        integer parent_question_id FK
+    }
+
+    response {
+        serial response_id PK
+        integer application_id FK
+        integer question_id FK
+        text response_value
+    }
+
+    application_analysis {
+        serial analysis_id PK
+        integer application_id FK
+        integer overall_score
+        varchar recommendation
+        varchar final_status
+        boolean has_masters_degree
+    }
+
+    event {
+        uuid event_id PK
+        uuid type_id FK
+        varchar title
+        timestamp start_time
+        integer capacity
+        boolean is_online
+        varchar workshop_type
+    }
+
+    event_registration {
+        serial registration_id PK
+        uuid event_id FK
+        integer applicant_id FK
+        varchar status
+        boolean needs_laptop
+    }
+
+    lead {
+        serial lead_id PK
+        varchar email UK
+        varchar status
+        integer applicant_id FK
+    }
+
+    lead_source {
+        serial source_id PK
+        integer lead_id FK
+        varchar source_type
+        varchar source_name
+    }
+
+    lead_engagement {
+        serial engagement_id PK
+        integer lead_id FK
+        varchar engagement_type
+    }
+
+    onboarding_tasks {
+        serial task_id PK
+        varchar title
+        boolean is_required
+        integer display_order
+    }
+      </pre>
+    </div>
+
+    <!-- ─── 2. IDENTITY TABLES ─── -->
+    <div id="s2" class="sec-head animate" style="--i:6">
+      <span class="dot" style="background:var(--identity)"></span> 2 &mdash; Identity Tables
+    </div>
+
+    <div class="schema-card animate" style="--i:7; border-left: 3px solid var(--identity);">
+      <div class="schema-card__header" style="color:var(--identity);">applicant</div>
+      <div class="schema-card__body">
+        <table class="col-table">
+          <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">applicant_id</td><td class="col-type">SERIAL</td><td><span class="col-pk">PK</span></td><td></td></tr>
+            <tr><td class="col-name">email</td><td class="col-type">VARCHAR(255)</td><td><span class="col-uq">UNIQUE</span> NOT NULL</td><td>Indexed</td></tr>
+            <tr><td class="col-name">first_name</td><td class="col-type">VARCHAR(100)</td><td></td><td></td></tr>
+            <tr><td class="col-name">last_name</td><td class="col-type">VARCHAR(100)</td><td></td><td></td></tr>
+            <tr><td class="col-name">password_hash</td><td class="col-type">VARCHAR(255)</td><td>NOT NULL</td><td></td></tr>
+            <tr><td class="col-name">verified</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td></td></tr>
+            <tr><td class="col-name">verification_token</td><td class="col-type">VARCHAR(255)</td><td></td><td>Indexed</td></tr>
+            <tr><td class="col-name">token_expires_at</td><td class="col-type">TIMESTAMP</td><td></td><td></td></tr>
+            <tr><td class="col-name">referral_source</td><td class="col-type">VARCHAR(255)</td><td></td><td>Indexed</td></tr>
+            <tr><td class="col-name">referral_detail</td><td class="col-type">TEXT</td><td></td><td></td></tr>
+            <tr><td class="col-name">nycha_resident</td><td class="col-type">VARCHAR(50)</td><td></td><td>Indexed</td></tr>
+            <tr><td class="col-name">email_opt_out</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td></td></tr>
+            <tr><td class="col-name">created_at</td><td class="col-type">TIMESTAMP</td><td>DEFAULT NOW()</td><td></td></tr>
+            <tr><td class="col-name">updated_at</td><td class="col-type">TIMESTAMP</td><td>DEFAULT NOW()</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <details class="collapsible animate" style="--i:8">
+      <summary style="color:var(--identity);">applicant_stage</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">stage_id</td><td class="col-type">UUID</td><td><span class="col-pk">PK</span></td><td>gen_random_uuid()</td></tr>
+            <tr><td class="col-name">applicant_id</td><td class="col-type">INTEGER</td><td><span class="col-fk">FK</span> <span class="col-uq">UNIQUE</span> NOT NULL</td><td>One stage per applicant</td></tr>
+            <tr><td class="col-name">current_stage</td><td class="col-type">VARCHAR(50)</td><td>CHECK constraint</td><td>See applicant-journey.html</td></tr>
+            <tr><td class="col-name">previous_stage</td><td class="col-type">VARCHAR(50)</td><td></td><td></td></tr>
+            <tr><td class="col-name">program_admission_status</td><td class="col-type">VARCHAR(50)</td><td>DEFAULT 'pending'</td><td>pending/accepted/rejected/waitlisted/withdrawn</td></tr>
+            <tr><td class="col-name">pledge_completed</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td></td></tr>
+            <tr><td class="col-name">pledge_signature_data</td><td class="col-type">TEXT</td><td></td><td>Canvas data URL</td></tr>
+            <tr><td class="col-name">deferred</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td></td></tr>
+            <tr><td class="col-name">deliberation</td><td class="col-type">VARCHAR(20)</td><td>CHECK (yes/maybe/no)</td><td>Staff review flag</td></tr>
+            <tr><td class="col-name">current_cohort_id</td><td class="col-type">UUID</td><td><span class="col-fk">FK</span> &rarr; cohort</td><td></td></tr>
+            <tr><td class="col-name">rollover_cohorts</td><td class="col-type">UUID[]</td><td>DEFAULT '{}'</td><td>History of cohort rollovers</td></tr>
+            <tr><td class="col-name">rollover_count</td><td class="col-type">INTEGER</td><td>DEFAULT 0</td><td></td></tr>
+            <tr><td class="col-name">is_rollover</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details class="collapsible animate" style="--i:9">
+      <summary style="color:var(--identity);">applicant_notes &amp; applicant_email_mapping</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Table</th><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><strong>applicant_notes</strong></td><td class="col-name">note_id</td><td class="col-type">SERIAL PK</td><td></td></tr>
+            <tr><td></td><td class="col-name">applicant_id</td><td class="col-type">INTEGER FK</td><td></td></tr>
+            <tr><td></td><td class="col-name">created_by</td><td class="col-type">INTEGER FK &rarr; users</td><td>Staff user</td></tr>
+            <tr><td></td><td class="col-name">note_content</td><td class="col-type">TEXT NOT NULL</td><td></td></tr>
+            <tr><td style="border-top:2px solid var(--border);"><strong>email_mapping</strong></td><td class="col-name" style="border-top:2px solid var(--border);">mapping_id</td><td class="col-type" style="border-top:2px solid var(--border);">SERIAL PK</td><td style="border-top:2px solid var(--border);"></td></tr>
+            <tr><td></td><td class="col-name">personal_email</td><td class="col-type">VARCHAR(255) UNIQUE</td><td></td></tr>
+            <tr><td></td><td class="col-name">pursuit_email</td><td class="col-type">VARCHAR(255) UNIQUE</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <!-- ─── 3. APPLICATION TABLES ─── -->
+    <div id="s3" class="sec-head animate" style="--i:10">
+      <span class="dot" style="background:var(--form)"></span> 3 &mdash; Application Form Tables
+    </div>
+
+    <details class="collapsible animate" style="--i:11" open>
+      <summary style="color:var(--form);">application</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">application_id</td><td class="col-type">SERIAL</td><td><span class="col-pk">PK</span></td><td></td></tr>
+            <tr><td class="col-name">applicant_id</td><td class="col-type">INTEGER</td><td><span class="col-fk">FK</span> NOT NULL</td><td>Indexed</td></tr>
+            <tr><td class="col-name">status</td><td class="col-type">VARCHAR(50)</td><td>DEFAULT 'draft'</td><td>draft/in_progress/submitted/ineligible</td></tr>
+            <tr><td class="col-name">submitted_at</td><td class="col-type">TIMESTAMP</td><td></td><td></td></tr>
+            <tr><td class="col-name">created_at</td><td class="col-type">TIMESTAMP</td><td>DEFAULT NOW()</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details class="collapsible animate" style="--i:12">
+      <summary style="color:var(--form);">section, question, choice_option, response</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Table</th><th>Key Columns</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><strong>section</strong></td><td class="col-type">section_id PK, name, display_order</td><td>Application form sections with ordering</td></tr>
+            <tr><td><strong>question</strong></td><td class="col-type">question_id PK, section_id FK, prompt, response_type, parent_question_id FK, show_when_parent_equals</td><td>Form questions with conditional logic (parent-child)</td></tr>
+            <tr><td><strong>choice_option</strong></td><td class="col-type">option_id PK, question_id FK, label, value, display_order</td><td>Options for radio/checkbox/select questions</td></tr>
+            <tr><td><strong>response</strong></td><td class="col-type">response_id PK, application_id FK, question_id FK, response_value</td><td>Applicant answers (UNIQUE on application_id + question_id)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <!-- ─── 4. EVENT TABLES ─── -->
+    <div id="s4" class="sec-head animate" style="--i:13">
+      <span class="dot" style="background:var(--events)"></span> 4 &mdash; Event Tables
+    </div>
+
+    <details class="collapsible animate" style="--i:14" open>
+      <summary style="color:var(--events);">event</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">event_id</td><td class="col-type">UUID</td><td><span class="col-pk">PK</span></td><td></td></tr>
+            <tr><td class="col-name">type_id</td><td class="col-type">UUID</td><td><span class="col-fk">FK</span> &rarr; event_type</td><td></td></tr>
+            <tr><td class="col-name">title</td><td class="col-type">VARCHAR(100)</td><td>NOT NULL</td><td></td></tr>
+            <tr><td class="col-name">start_time / end_time</td><td class="col-type">TIMESTAMPTZ</td><td>NOT NULL</td><td></td></tr>
+            <tr><td class="col-name">location</td><td class="col-type">VARCHAR(200)</td><td>NOT NULL</td><td></td></tr>
+            <tr><td class="col-name">capacity</td><td class="col-type">INTEGER</td><td>NOT NULL</td><td></td></tr>
+            <tr><td class="col-name">is_online</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td></td></tr>
+            <tr><td class="col-name">meeting_link</td><td class="col-type">TEXT</td><td></td><td>For online sessions</td></tr>
+            <tr><td class="col-name">workshop_type</td><td class="col-type">VARCHAR(50)</td><td>CHECK (admissions/external)</td><td></td></tr>
+            <tr><td class="col-name">cohort_id</td><td class="col-type">UUID</td><td><span class="col-fk">FK</span> &rarr; cohort</td><td></td></tr>
+            <tr><td class="col-name">is_active</td><td class="col-type">BOOLEAN</td><td>DEFAULT true</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details class="collapsible animate" style="--i:15">
+      <summary style="color:var(--events);">event_registration</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">registration_id</td><td class="col-type">SERIAL</td><td><span class="col-pk">PK</span></td><td></td></tr>
+            <tr><td class="col-name">event_id</td><td class="col-type">UUID</td><td><span class="col-fk">FK</span></td><td></td></tr>
+            <tr><td class="col-name">applicant_id</td><td class="col-type">INTEGER</td><td><span class="col-fk">FK</span></td><td>UNIQUE with event_id</td></tr>
+            <tr><td class="col-name">name / email</td><td class="col-type">VARCHAR</td><td>NOT NULL</td><td></td></tr>
+            <tr><td class="col-name">status</td><td class="col-type">VARCHAR(50)</td><td>DEFAULT 'registered'</td><td>registered/attended/attended_late/very_late/no_show/cancelled</td></tr>
+            <tr><td class="col-name">needs_laptop</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td>Workshop-specific</td></tr>
+            <tr><td class="col-name">reminder_48h_sent</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td></td></tr>
+            <tr><td class="col-name">reminder_24h_sent</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <!-- ─── 5. ANALYSIS & LEADS ─── -->
+    <div id="s5" class="sec-head animate" style="--i:16">
+      <span class="dot" style="background:var(--analysis)"></span> 5 &mdash; Analysis &amp; Leads
+    </div>
+
+    <details class="collapsible animate" style="--i:17" open>
+      <summary style="color:var(--analysis);">application_analysis</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="col-name">analysis_id</td><td class="col-type">SERIAL</td><td><span class="col-pk">PK</span></td><td></td></tr>
+            <tr><td class="col-name">application_id</td><td class="col-type">INTEGER</td><td><span class="col-fk">FK</span></td><td></td></tr>
+            <tr><td class="col-name">learning_score</td><td class="col-type">INTEGER</td><td>CHECK 0-100</td><td></td></tr>
+            <tr><td class="col-name">grit_score</td><td class="col-type">INTEGER</td><td>CHECK 0-100</td><td></td></tr>
+            <tr><td class="col-name">critical_thinking_score</td><td class="col-type">INTEGER</td><td>CHECK 0-100</td><td></td></tr>
+            <tr><td class="col-name">overall_score</td><td class="col-type">INTEGER</td><td>CHECK 0-100</td><td>Indexed</td></tr>
+            <tr><td class="col-name">recommendation</td><td class="col-type">VARCHAR(50)</td><td>CHECK constraint</td><td>strong_recommend / recommend / review_needed / not_recommend</td></tr>
+            <tr><td class="col-name">strengths</td><td class="col-type">TEXT</td><td></td><td></td></tr>
+            <tr><td class="col-name">concerns</td><td class="col-type">TEXT</td><td></td><td></td></tr>
+            <tr><td class="col-name">has_masters_degree</td><td class="col-type">BOOLEAN</td><td>DEFAULT false</td><td>Indexed</td></tr>
+            <tr><td class="col-name">masters_evidence</td><td class="col-type">JSONB</td><td></td><td></td></tr>
+            <tr><td class="col-name">final_status</td><td class="col-type">VARCHAR(50)</td><td></td><td>Human-overridden status</td></tr>
+            <tr><td class="col-name">analyzer_version</td><td class="col-type">VARCHAR(20)</td><td>DEFAULT 'v5.0'</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details class="collapsible animate" style="--i:18">
+      <summary style="color:var(--leads);">lead, lead_source, lead_engagement, lead_note</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Table</th><th>Key Columns</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><strong>lead</strong></td><td class="col-type">lead_id PK, email UK, status, applicant_id FK</td><td>Pre-applicant contacts. Status: new/nurturing/qualified/converted/unsubscribed/invalid</td></tr>
+            <tr><td><strong>lead_source</strong></td><td class="col-type">source_id PK, lead_id FK, source_type, source_name, captured_at</td><td>Multi-source tracking per lead</td></tr>
+            <tr><td><strong>lead_engagement</strong></td><td class="col-type">engagement_id PK, lead_id FK, engagement_type, success</td><td>Types: email_sent/opened/clicked, event_registered/attended, sms_sent, call_made</td></tr>
+            <tr><td><strong>lead_note</strong></td><td class="col-type">note_id PK, lead_id FK, created_by FK, note_content</td><td>Staff notes on leads</td></tr>
+            <tr><td><strong>email_automation_log</strong></td><td class="col-type">log_id PK, applicant_id FK, email_type, send_count, next_send_at, is_queued</td><td>Email queue with scheduling. UNIQUE on applicant_id + email_type</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <!-- ─── 6. ONBOARDING ─── -->
+    <div id="s6" class="sec-head animate" style="--i:19">
+      <span class="dot" style="background:var(--onboard)"></span> 6 &mdash; Onboarding Tables
+    </div>
+
+    <details class="collapsible animate" style="--i:20" open>
+      <summary style="color:var(--onboard);">onboarding_tasks &amp; completions</summary>
+      <div class="collapsible__body">
+        <table class="col-table">
+          <thead><tr><th>Table</th><th>Key Columns</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><strong>onboarding_tasks</strong></td><td class="col-type">task_id PK, title, description, link_url, is_required, display_order, is_active</td><td>Configurable onboarding tasks with ordering and active flags</td></tr>
+            <tr><td><strong>applicant_onboarding_task_completions</strong></td><td class="col-type">completion_id PK, applicant_id FK, task_id FK, completed_at</td><td>Tracks which tasks each applicant has completed. UNIQUE on applicant_id + task_id</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    look: 'classic',
+    themeVariables: {
+      primaryColor: isDark ? '#222740' : '#f1f5f9',
+      primaryBorderColor: isDark ? '#c084fc' : '#7c3aed',
+      primaryTextColor: isDark ? '#e2e8f0' : '#0f172a',
+      lineColor: isDark ? '#94a3b8' : '#64748b',
+      fontSize: '13px',
+      fontFamily: "'Sora', system-ui, sans-serif",
+    }
+  });
+</script>
+<script>
+  function updateZoomState(w){var t=w.querySelector('.mermaid');w.classList.toggle('is-zoomed',parseFloat(t.dataset.zoom||'1')>1);}
+  function zoomDiagram(b,f){var w=b.closest('.mermaid-wrap'),t=w.querySelector('.mermaid'),c=parseFloat(t.dataset.zoom||'1'),n=Math.min(Math.max(c*f,0.3),5);t.dataset.zoom=n;t.style.transform='scale('+n+')';updateZoomState(w);}
+  function resetZoom(b){var w=b.closest('.mermaid-wrap'),t=w.querySelector('.mermaid');t.dataset.zoom='1';t.style.transform='scale(1)';updateZoomState(w);}
+  document.querySelectorAll('.mermaid-wrap').forEach(function(w){w.addEventListener('wheel',function(e){if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();var t=w.querySelector('.mermaid'),c=parseFloat(t.dataset.zoom||'1'),f=e.deltaY<0?1.1:0.9,n=Math.min(Math.max(c*f,0.3),5);t.dataset.zoom=n;t.style.transform='scale('+n+')';updateZoomState(w);},{passive:false});var sX,sY,sL,sT;w.addEventListener('mousedown',function(e){if(e.target.closest('.zoom-controls'))return;var t=w.querySelector('.mermaid');if(parseFloat(t.dataset.zoom||'1')<=1)return;w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=w.scrollLeft;sT=w.scrollTop;});window.addEventListener('mousemove',function(e){if(!w.classList.contains('is-panning'))return;w.scrollLeft=sL-(e.clientX-sX);w.scrollTop=sT-(e.clientY-sY);});window.addEventListener('mouseup',function(){w.classList.remove('is-panning');});});
+</script>
+<script>
+(function(){var toc=document.getElementById('toc'),links=toc.querySelectorAll('a'),secs=[];links.forEach(function(l){var id=l.getAttribute('href').slice(1),el=document.getElementById(id);if(el)secs.push({id:id,el:el,link:l});});var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(l){l.classList.remove('active');});var m=secs.find(function(s){return s.el===e.target;});if(m){m.link.classList.add('active');if(window.innerWidth<=1000)m.link.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}}});},{rootMargin:'-10% 0px -80% 0px'});secs.forEach(function(s){obs.observe(s.el);});links.forEach(function(l){l.addEventListener('click',function(e){e.preventDefault();var id=l.getAttribute('href').slice(1),el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'','#'+id);}});});})();
+</script>
+</body>
+</html>
