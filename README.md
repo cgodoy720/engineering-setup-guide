@@ -10,6 +10,8 @@ Our codebase consists of two main repositories:
 
 For detailed information about our tech stack and architecture diagrams, please see [tech-stack-diagram.md](./tech-stack-diagram.md).
 
+For an interactive overview of platform systems, see the [deployed visual guide](https://platform-visuals-igpmdh52e-joinpursuit.vercel.app/).
+
 ## Getting Started
 
 ### Prerequisites
