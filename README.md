@@ -12,6 +12,12 @@ For detailed information about our tech stack and architecture diagrams, please 
 
 For an interactive overview of platform systems, see the [deployed visual guide](https://platform-visuals-igpmdh52e-joinpursuit.vercel.app/).
 
+## Onboarding a New Engineer
+
+Start with the [New Engineer Onboarding Checklist](./new-engineer-onboarding.md) — access grants,
+machine setup, and the full documentation index — and the
+[Engineer Onboarding Guide](./engineer-onboarding-guide.md), the complete platform tour.
+
 ## Getting Started
 
 ### Prerequisites
