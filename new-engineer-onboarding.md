@@ -75,15 +75,16 @@ All platform documentation, in reading order:
 - **[Tech Stack & Architecture](./tech-stack-diagram.md)** — stack summary + architecture and
   user-journey diagrams; database ERD in [images/database-erd.md](./images/database-erd.md).
 
-### System deep-dives (`visual-guides/`)
+### System deep-dives — Platform Visuals
 
-One folder per platform system, each with a written overview (`system-overview.md`), the
-relevant schema (`schema.sql`), and a rendered visual (`system-overview.html`):
-admin-management · admissions · assessment-performance · attendance · external-cohorts ·
-forms-surveys · learning-curriculum · onboarding · pathfinder · payment · sales-outreach ·
-volunteer-management · weekly-reports
-
-There is also a [deployed interactive visual guide](https://platform-visuals-igpmdh52e-joinpursuit.vercel.app/).
+The **[deployed Platform Visuals app](https://platform-visuals-igpmdh52e-joinpursuit.vercel.app/)**
+is the living system documentation: one entry per platform system, each with a rendered visual
+guide and an `agent.md` reference. Source lives in
+[Pursuit-Assets/platform-visuals](https://github.com/Pursuit-Assets/platform-visuals) and is
+kept current automatically when code merges to main. Systems covered: admissions ·
+admin-management · assessment-performance · attendance · external-cohorts · forms-surveys ·
+learning-curriculum · onboarding · pathfinder · payment · sales-outreach · volunteer-management ·
+weekly-reports · ai-coach · skills-taxonomy · platform-intake
 
 ### Working guides
 
