@@ -18,20 +18,23 @@ items off as they're completed. Carlos grants everything unless noted otherwise.
 - [ ] Claude seat (Teams / Cowork) — used for Claude Code and platform work
 - [ ] Pursuit DB Connector enabled on their Claude account — read-only Postgres + BigQuery
 - [ ] Platform staff account — log into the app itself as staff
-- [ ] Engineer has a GitHub account (any personal account works — the wizard grants repo access)
-- [ ] Sent them `setup.sh` + `env.secrets.gpg` (from the private `platform-onboarding` repo — Slack DM is fine)
-- [ ] Onboarding passphrase shared — verbally / 1:1, never alongside the files
+- [ ] Engineer has a GitHub account (any personal account works — the wizard grants code-repo access)
+- [ ] Invited as **collaborator on the private `platform-onboarding` repo** (Settings → Collaborators)
+- [ ] Onboarding passphrase shared — verbally / 1:1, never in the same channel as repo access
 
 ## 2. Machine setup (day one, self-serve)
 
-Send them this message with the two files:
+Send them this message once they've accepted the repo invite:
 
 ```
-1. Save both files I sent you into the same folder (e.g. Downloads)
+1. Accept my GitHub invite to platform-onboarding (check your email/github notifications)
 2. Open Terminal (Cmd+Space, type "Terminal", hit Enter)
 3. Paste this and hit Enter:
-   cd ~/Downloads && bash setup.sh --passphrase "THE_PASSPHRASE"
+   git clone https://github.com/cgodoy720/platform-onboarding.git ~/pursuit-onboarding && cd ~/pursuit-onboarding && bash setup.sh --passphrase "THE_PASSPHRASE"
 4. Follow the prompts. That's it.
+   (If git asks you to log in, use your GitHub username + a personal access token —
+    or skip git: on the repo page click Code → Download ZIP, unzip, and run
+    "bash setup.sh --passphrase ..." from inside that folder.)
 ```
 
 The wizard does the rest automatically: installs all tooling, signs them into GitHub, **adds
@@ -87,8 +90,6 @@ There is also a [deployed interactive visual guide](https://platform-visuals-igp
 - **[Cursor IDE Guide](./cursor.md)** — editor setup and AI-assisted workflow.
 - **[Smart Tasks Testing Guide](./smart-tasks-testing-guide.md)** — testing the AI-powered
   learning tasks.
-- **[Database & Content Preview Changes](./database-and-preview-changes.md)** — schema-change
-  history and the Content Preview feature.
 
 ### In the code repos (read once cloned)
 
