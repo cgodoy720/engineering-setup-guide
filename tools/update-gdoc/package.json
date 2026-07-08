@@ -1,0 +1,14 @@
+{
+  "name": "update-gdoc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Update a Google Doc's content in place (same URL/ID/sharing) from an HTML file",
+  "main": "update-gdoc.js",
+  "bin": {
+    "update-gdoc": "./update-gdoc.js"
+  },
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "googleapis": "^144.0.0"
+  }
+}
