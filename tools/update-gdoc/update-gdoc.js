@@ -27,7 +27,7 @@ const TOKEN_PATH = path.join(TOKEN_DIR, 'token.json');
 
 function usage(msg) {
   if (msg) console.error(`Error: ${msg}\n`);
-  console.error('Usage: node update-gdoc.js <docId-or-docs-url> <content.html>');
+  console.error('Usage: node update-gdoc.js <docId-or-docs-url> <content.html|content.md>');
   process.exit(1);
 }
 
@@ -99,9 +99,11 @@ async function main() {
     process.exit(1);
   }
 
+  // Markdown converts with native Docs checkboxes/tables; HTML for everything else
+  const sourceMime = path.extname(htmlPath).toLowerCase() === '.md' ? 'text/markdown' : 'text/html';
   await drive.files.update({
     fileId,
-    media: { mimeType: 'text/html', body: fs.createReadStream(htmlPath) },
+    media: { mimeType: sourceMime, body: fs.createReadStream(htmlPath) },
   });
 
   console.log(`Updated "${meta.name}" in place: https://docs.google.com/document/d/${fileId}/edit`);
