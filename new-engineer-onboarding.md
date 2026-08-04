@@ -46,8 +46,8 @@ its troubleshooting README isn't visible to new hires).
 **Verify:**
 
 - [ ] Wizard completed without errors
-- [ ] Collaborator access on `cgodoy720/test-pilot-server` + `cgodoy720/pilot-client`
-      (granted by the wizard — spot-check under each repo's Settings → Collaborators)
+- [ ] Collaborator access on `Pursuit-Org/platform`
+      (granted by the wizard — spot-check under the repo's Settings → Collaborators)
 - [ ] Backend responds on `http://localhost:7001`
 - [ ] Frontend responds on `http://localhost:5173`
 - [ ] Can log into the app locally with their staff account
@@ -80,7 +80,7 @@ All platform documentation, in reading order:
 The **[deployed Platform Visuals app](https://platform-visuals-igpmdh52e-joinpursuit.vercel.app/)**
 is the living system documentation: one entry per platform system, each with a rendered visual
 guide and an `agent.md` reference. Source lives in
-[Pursuit-Assets/platform-visuals](https://github.com/Pursuit-Assets/platform-visuals) and is
+[Pursuit-Org/platform-visuals](https://github.com/Pursuit-Org/platform-visuals) and is
 kept current automatically when code merges to main. Systems covered: admissions ·
 admin-management · assessment-performance · attendance · external-cohorts · forms-surveys ·
 learning-curriculum · onboarding · pathfinder · payment · sales-outreach · volunteer-management ·
@@ -92,17 +92,16 @@ weekly-reports · ai-coach · skills-taxonomy · platform-intake
 - **[Smart Tasks Testing Guide](./smart-tasks-testing-guide.md)** — testing the AI-powered
   learning tasks.
 
-### In the code repos (read once cloned)
+### In the code repository (read once cloned)
 
-- `test-pilot-server/CLAUDE.md` — backend conventions and gotchas (authoritative).
-- `test-pilot-server/app-context.md` — full-stack feature/file map, 13 feature areas.
-- `test-pilot-server/data-dictionary.md` + `database-schema.sql` — the 60+ table schema.
-- `test-pilot-server/graphs/coachV2/coachV2-architecture.md` — the V2 Coach agent topology.
-- `test-pilot-server/PROMPT_TESTING_GUIDE.md` — prompt testing and evals.
-- `pilot-client/CLAUDE.md` — frontend conventions (authoritative).
-- `pilot-client/admin-dash-prd.md` — Admin Dashboard living product contract.
+- `server/CLAUDE.md` — backend conventions and gotchas (authoritative).
+- `server/app-context.md` — full-stack feature/file map, 13 feature areas.
+- `server/data-dictionary.md` + `server/database-schema.sql` — the 60+ table schema.
+- `server/graphs/coachV2-architecture.md` — the V2 Coach agent topology.
+- `client/CLAUDE.md` — frontend conventions (authoritative).
+- `client/admin-dash-prd.md` — Admin Dashboard living product contract.
 
-> Note: both repos' `README.md` files are outdated — the `CLAUDE.md` files are the source of
+> Note: the `README.md` files in `server/` and `client/` are outdated — the `CLAUDE.md` files are the source of
 > truth for run instructions and conventions.
 
 **Verify:**

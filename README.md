@@ -2,9 +2,9 @@
 
 ## Repository Structure
 
-Our codebase consists of two main repositories:
-- **Backend**: `test-pilot-server`
-- **Frontend**: `pilot-client`
+Our codebase lives in a single repository, [`Pursuit-Org/platform`](https://github.com/Pursuit-Org/platform), with the backend and frontend as separate package roots:
+- **Backend**: `server/`
+- **Frontend**: `client/`
 
 ## Tech Stack
 
@@ -30,45 +30,41 @@ machine setup, and the full documentation index — and the
 
 ### Initial Setup
 
-1. **Fork both repositories on GitHub**:
+1. **Fork the repository on GitHub**:
    
-   **Fork the backend repository:**
-   - Go to [https://github.com/cgodoy720/test-pilot-server](https://github.com/cgodoy720/test-pilot-server)
+   - Go to [https://github.com/Pursuit-Org/platform](https://github.com/Pursuit-Org/platform)
    - Click the **"Fork"** button in the top-right corner
    - Click **"Create fork"** (keep default settings)
    
-   **Fork the frontend repository:**
-   - Go to [https://github.com/cgodoy720/pilot-client](https://github.com/cgodoy720/pilot-client)
-   - Click the **"Fork"** button in the top-right corner
-   - Click **"Create fork"** (keep default settings)
-   
-   **Note**: This creates your own copies of the repositories that you can modify and submit pull requests from.
+   **Note**: This creates your own copy of the repository that you can modify and submit pull requests from.
 
-2. **In the `terminal` create a parent folder and clone your forked repositories**:
+2. **In the `terminal`, clone your forked repository**:
    ```bash
-   # Create a parent folder for the project
-   mkdir pilot-agent-project
-   cd pilot-agent-project
-   
-   # Clone YOUR forked repositories (replace YOUR_USERNAME with your GitHub username)
-   git clone https://github.com/YOUR_USERNAME/test-pilot-server.git
-   git clone https://github.com/YOUR_USERNAME/pilot-client.git
+   # Clone YOUR fork (replace YOUR_USERNAME with your GitHub username)
+   git clone https://github.com/YOUR_USERNAME/platform.git
+   cd platform
    ```
    
    Your folder structure should now look like:
    ```
-   pilot-agent-project/
-   ├── test-pilot-server/
-   └── pilot-client/
+   platform/
+   ├── server/
+   └── client/
    ```
 
-3. **Open the parent folder in Cursor**:
+3. **Open the repository in Cursor**:
    - Open Cursor IDE
    - Go to File → Open Folder (or `Command + O` on Mac)
-   - Select the `pilot-agent-project` folder you just created
-   - **Important**: This gives Cursor's AI context of both repositories, making it much more helpful!
+   - Select the `platform` folder you just cloned
+   - **Important**: Opening the repository root gives Cursor's AI context of both the backend and frontend, making it much more helpful!
 
-4. **Set up terminals and create feature branches** (never work directly on main):
+4. **Create a feature branch and set up terminals** (never work directly on main):
+   
+   Because the backend and frontend now share one repository, you create **one** feature
+   branch that covers both sides of your change:
+   ```bash
+   git checkout -b replace-with-your-feature-name
+   ```
    
    **Open and set up two terminals in Cursor:**
    - Open a terminal: View → Terminal (or `Control + `` backtick)
@@ -78,17 +74,15 @@ machine setup, and the full documentation index — and the
    
    **In the `backend` terminal:**
    ```bash
-   cd test-pilot-server
-   git checkout -b replace-with-your-feature-name
+   cd server
    ```
    
    **In the `frontend` terminal:**
    ```bash
-   cd pilot-client
-   git checkout -b replace-with-your-feature-name
+   cd client
    ```
    
-   **Note**: Keep these terminals open - you'll use the `backend` terminal for all backend commands and `frontend` terminal for all frontend commands throughout development!
+   **Note**: Keep these terminals open - you'll use the `backend` terminal for all backend commands and `frontend` terminal for all frontend commands throughout development! Both terminals are on the same branch, so a single commit can span the backend and the frontend.
 
 5. **Environment Configuration**:
    
@@ -158,7 +152,7 @@ machine setup, and the full documentation index — and the
 
 > **For Cursor IDE users**: See [cursor.md](./cursor.md) for Cursor-specific best practices, AI tips, and keyboard shortcuts.
 
-## Backend Architecture (`test-pilot-server`)
+## Backend Architecture (`server/`)
 
 ### Directory Structure
 - **`db/`**: Database configuration
@@ -193,7 +187,7 @@ machine setup, and the full documentation index — and the
 - Business logic should be extracted to `services/` modules
 - Use proper error handling and validation
 
-## Frontend Architecture (`pilot-client`)
+## Frontend Architecture (`client/`)
 
 ### Directory Structure
 - **`src/components/`**: Reusable UI components
@@ -274,25 +268,19 @@ machine setup, and the full documentation index — and the
    git commit -m "descriptive commit message"
    ```
 
-4. **Push your branches**:
-   
-   **In the `backend` terminal:**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-   
-   **In the `frontend` terminal:**
+4. **Push your branch** (from either terminal — it's one repository, so one push covers
+   both the backend and the frontend):
    ```bash
    git push origin feature/your-feature-name
    ```
 
-5. **Create Pull Requests** on GitHub:
-   - Go to your forked repository on GitHub (https://github.com/YOUR_USERNAME/test-pilot-server or pilot-client)
+5. **Create a Pull Request** on GitHub:
+   - Go to your forked repository on GitHub (https://github.com/YOUR_USERNAME/platform)
    - Click **"Compare & pull request"** button that appears after pushing
-   - Make sure the pull request is going from your fork to the original repository (`cgodoy720/test-pilot-server` or `cgodoy720/pilot-client`)
+   - Make sure the pull request is going from your fork to the original repository (`Pursuit-Org/platform`)
    - Add a clear title and description of your changes
    - Click **"Create pull request"**
-   - Repeat for the other repository if you made changes to both
+   - A change that touches both `server/` and `client/` is now a **single** pull request — no need to coordinate two.
 
 ### Code Review Process
 - All code must be reviewed before merging
@@ -414,7 +402,7 @@ machine setup, and the full documentation index — and the
 
 **Clone URL errors**
 - **Issue**: `git clone` fails with permission denied or repository not found
-- **Solution**: Make sure you forked the repositories first and are cloning from YOUR GitHub username, not `cgodoy720`
+- **Solution**: Make sure you forked the repository first and are cloning from YOUR GitHub username, not `Pursuit-Org`
 
 **Database configuration errors**
 - **Issue**: SSL connection errors or "rejectUnauthorized" errors
@@ -424,7 +412,7 @@ machine setup, and the full documentation index — and the
 - **Issue**: Cannot connect to database
 - **Solution**: 
   1. Verify `.env` file has correct database credentials from `.env.example`
-  2. Check that you're in the `test-pilot-server` folder when running the app
+  2. Check that you're in the `server` folder when running the app
   3. Make sure your internet connection is working
 
 #### Frontend Not Loading
