@@ -15,8 +15,8 @@ Start a new conversation and provide Cursor with the full application context:
 ```
 I'm working on the Pursuit AI Native project. Here's the full context:
 
-@test-pilot-server/app-context.md
-@test-pilot-server/database-schema.sql
+@server/app-context.md
+@server/database-schema.sql
 
 I want to understand the codebase before making changes.
 ```
@@ -49,8 +49,8 @@ When ready to build, use this workflow:
    ```
    I need to add a new field "phone_number" to the user profile.
    
-   @test-pilot-server/app-context.md
-   @test-pilot-server/database-schema.sql
+   @server/app-context.md
+   @server/database-schema.sql
    
    Create a plan for:
    1. Adding the database column
@@ -69,17 +69,17 @@ When ready to build, use this workflow:
 **Give Context to Cursor**:
 - `@app-context.md` - Full app overview
 - `@database-schema.sql` - Complete database structure
-- `@test-pilot-server/README.md` - Setup and best practices
+- `@server/README.md` - Setup and best practices
 - `@filename.js` - Reference any specific file
 
 **Common First Prompts**:
 ```
-@test-pilot-server/app-context.md
+@server/app-context.md
 Explain how [feature name] works in this app.
 ```
 
 ```
-@test-pilot-server/app-context.md
+@server/app-context.md
 @database-schema.sql
 I need to add [feature]. Create a plan in Plan mode.
 ```
@@ -95,7 +95,7 @@ Let's say you want to add a "Notes" field to builder profiles:
 
 **1. Start with context:**
 ```
-@test-pilot-server/app-context.md
+@server/app-context.md
 @database-schema.sql
 
 I want to add a notes field to builder profiles where staff can add internal notes about each builder. What tables and files will I need to modify?
@@ -103,7 +103,7 @@ I want to add a notes field to builder profiles where staff can add internal not
 
 **2. Switch to Plan Mode and request a plan:**
 ```
-@test-pilot-server/app-context.md
+@server/app-context.md
 @database-schema.sql
 
 Create a plan to add a staff_notes TEXT field to user profiles:
@@ -123,7 +123,7 @@ Test the API endpoint for adding notes by calling POST /api/profile/notes
 ```
 [New conversation]
 
-@test-pilot-server/app-context.md
+@server/app-context.md
 Working on attendance reports. Show me the attendance system architecture.
 ```
 
@@ -166,7 +166,7 @@ Working on attendance reports. Show me the attendance system architecture.
 - **After major changes**: Begin new conversation after completing a significant feature
 - **Provide context**: In new chats, reference key files or provide brief context about what you're working on
 
-**Tip**: Use `@` to reference files and test-pilot-server to quickly give context to new conversations.
+**Tip**: Use `@` to reference files and directories to quickly give context to new conversations.
 
 ---
 
@@ -191,7 +191,7 @@ To ensure consistent development practices, set up these rules in Cursor:
 
 5. Follow the current project's file structure and style conventions.
 
-6. Understand the project entry points: Backend (test-pilot-server) starts at app.js, Frontend (pilot-client) starts at main.jsx.
+6. Understand the project entry points: Backend (`server/`) starts at app.js, Frontend (`client/`) starts at src/main.jsx.
 ```
 
 These rules ensure consistent code quality, proper workflow management, and clear communication during development.
@@ -202,7 +202,7 @@ These rules ensure consistent code quality, proper workflow management, and clea
 - **Always have the parent folder open**: This gives the AI context of both frontend and backend
 - **Use specific prompts**: Instead of "fix this," say "fix this component using Tailwind CSS utilities"
 - **Reference files with @**: Use `@filename` to give Cursor context about specific files
-- **Reference test-pilot-server**: Use `@test-pilot-server/` to include project docs in your prompt
+- **Reference the repo**: Use `@server/` or `@client/` to include project docs in your prompt
 - **Ask for explanations**: Use prompts like "explain how this database query works"
 - **Break down complex tasks**: Ask Cursor to tackle one piece at a time for better results
 
@@ -214,7 +214,7 @@ These rules ensure consistent code quality, proper workflow management, and clea
 - **Command + Shift + L**: Select all occurrences of selected text
 
 ### Working with Multiple Projects
-- **File Explorer**: Use the left sidebar to navigate between `test-pilot-server` and `pilot-client`
+- **File Explorer**: Use the left sidebar to navigate between `server/` and `client/`
 - **Terminal**: Use Cursor's built-in terminal (View → Terminal) or `Control + `` (backtick)
 - **Split View**: Right-click a file tab → "Split Right" to view backend and frontend files side-by-side
 

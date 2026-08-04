@@ -14,14 +14,14 @@ This diagram shows the builder/facilitator user journey and how they interact wi
 
 ## Tech Stack
 
-### Backend (`test-pilot-server`)
+### Backend (`server/`)
 - **Runtime**: Node.js with Express.js
 - **Database**: PostgreSQL with pgvector extension
 - **AI/ML**: OpenRouter API integration with vector embeddings
 - **Authentication**: JWT with bcrypt
 - **Additional Services**: Google Cloud BigQuery, AWS S3, Nodemailer
 
-### Frontend (`pilot-client`) 
+### Frontend (`client/`) 
 - **Framework**: React with Vite build tool
 - **Routing**: React Router DOM
 - **Styling**: Tailwind CSS with shadcn/ui components

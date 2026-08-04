@@ -31,12 +31,12 @@ Key vocabulary:
 
 ## 2. The system at a glance
 
-After setup, two codebases live in `~/Documents/pursuit-platform/`:
+After setup, one repository (`Pursuit-Org/platform`) lives in `~/Documents/pursuit-platform/`, with two package roots:
 
-| Repo | What it is | Stack | Port |
+| Package root | What it is | Stack | Port |
 |------|-----------|-------|------|
-| **`test-pilot-server`** | Backend API + AI engine | Node/Express, PostgreSQL (pg-promise + pgvector), LangGraph | **7001** |
-| **`pilot-client`** | Web frontend (SPA) | React 19, Vite, Tailwind + shadcn/ui, Zustand, React Query | **5173** |
+| **`server/`** | Backend API + AI engine | Node/Express, PostgreSQL (pg-promise + pgvector), LangGraph | **7001** |
+| **`client/`** | Web frontend (SPA) | React 19, Vite, Tailwind + shadcn/ui, Zustand, React Query | **5173** |
 
 Plus a **ready-to-use tool** (nothing to clone or run — see §4):
 
@@ -46,14 +46,14 @@ Plus a **ready-to-use tool** (nothing to clone or run — see §4):
 
 ```
                     ┌─────────────────┐
-   Browser  ──────► │  pilot-client   │  React SPA (Vite)
+   Browser  ──────► │  client/        │  React SPA (Vite)
                     │  :5173          │
                     └────────┬────────┘
                              │  REST + SSE (Authorization: Bearer <JWT>)
                              ▼
                     ┌─────────────────┐        ┌──────────────────────┐
-                    │ test-pilot-     │───────►│  PostgreSQL          │
-                    │ server  :7001   │        │  (segundo-db,        │
+                    │ server/  :7001  │───────►│  PostgreSQL          │
+                    │                 │        │  (segundo-db,        │
                     │  Express + AI   │        │   pgvector, 60+ tbls)│
                     └───┬─────────┬───┘        └──────────┬───────────┘
                         │         │                       │
@@ -83,25 +83,25 @@ secrets, runs `npm install`, and starts both servers.
 both files in one folder, then run the command from the
 [New Engineer Onboarding Checklist](./new-engineer-onboarding.md)
 (`bash setup.sh --passphrase "..."`). After first setup, `pursuit-sync` pulls latest `dev` for
-both repos.
+the repository.
 
 If you'd rather set up manually:
 
 ```bash
 # Backend
-cd test-pilot-server
+cd server
 cp .env.example .env          # then fill in real values from the team secrets bundle
 npm install
 npx nodemon server.js         # → http://localhost:7001
 
 # Frontend (new terminal)
-cd pilot-client
+cd client
 cp .env.example .env          # set VITE_API_URL=http://localhost:7001
 npm install
 npm run dev                   # → http://localhost:5173
 ```
 
-- **Node 20 / npm 10.9.0** (matches Netlify; there's an `.nvmrc` in the client).
+- **Node 20 / npm 10.9.0** (matches Netlify; there's an `.nvmrc` in `client/`).
 - You do **not** run Postgres locally — everyone shares a hosted dev database. Env vars point you at it.
 - **`PG_SSL` behavior:** `db/dbConfig.js` only enables SSL when `PG_SSL=true` is set.
 - BigQuery self-disables locally if `db/bq-config/key.json` is missing — that's fine.
@@ -113,7 +113,7 @@ npm run dev                   # → http://localhost:5173
 
 ## 4. Codebase map
 
-### Backend — `test-pilot-server`
+### Backend — `server/`
 The real composition root is **`app.js`** (not `server.js`). `server.js` boots the listener and starts
 cron jobs, then requires `app.js`, which imports ~80 controllers and mounts most routes **inline**
 (`app.post('/api/...', authenticateToken, controller.method)`).
@@ -155,7 +155,7 @@ init → learn → generateApply → apply → grade → remediate → complete 
 - Quality tooling: an LLM-judge **eval** harness (`graphs/coachV2/eval/`) and a **Golden Dataset** of
   synthetic builder archetypes (`graphs/coachV2/golden/`). See `PROMPT_TESTING_GUIDE.md`.
 
-### Frontend — `pilot-client`
+### Frontend — `client/`
 - `main.jsx` wires React Query + Router; **`App.jsx`** holds all routes and role guards.
 - `pages/` — ~65 route-level features (Dashboard, Learning/AI chat, Admin Dashboard, Admissions,
   Coach admin suite, Pathfinder/Sputnik employment engine, Onboarding, applicant flow).
@@ -282,8 +282,8 @@ commands (in Claude Code):
 
 - [ ] Run the setup wizard (get the passphrase from Carlos); confirm both servers boot.
 - [ ] Log in locally as a test user and click through Dashboard → Learning → Admin Dashboard.
-- [ ] Read `test-pilot-server/CLAUDE.md`, `app-context.md`, and `graphs/coachV2/coachV2-architecture.md`.
-- [ ] Read `pilot-client/CLAUDE.md` and `admin-dash-prd.md`.
+- [ ] Read `server/CLAUDE.md`, `server/app-context.md`, and `server/graphs/coachV2-architecture.md`.
+- [ ] Read `client/CLAUDE.md` and `client/admin-dash-prd.md`.
 - [ ] Trace one request end-to-end: click something in the UI → find the `services/` call →
       the `app.js` route → the controller → the query.
 - [ ] Skim `database-schema.sql` / `data-dictionary.md` for the `users`, `cohorts`, `applications`,
